@@ -16,7 +16,6 @@ import History from '../pages/DataTables/History';
 import AllUsers from '../pages/DataTables/AllUsers';
 const Index = lazy(() => import('../pages/Index'));
 const Finance = lazy(() => import('../pages/Finance'));
-const Accordians = lazy(() => import('../pages/Components/Accordians'));
 const Cards = lazy(() => import('../pages/Components/Cards'));
 const Notification = lazy(() => import('../pages/Components/Notification'));
 const Skin = lazy(() => import('../pages/DataTables/Skin'));
@@ -100,11 +99,6 @@ const routes = [
         element: <WithdrawRequests />,
     },
     // crypto page
-    
-    {
-        path: '/components/accordions',
-        element: <Accordians />,
-    },
 
     {
         path: '/components/cards',

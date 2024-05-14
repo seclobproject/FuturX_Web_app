@@ -82,9 +82,9 @@ const Finance = () => {
 
     // const [url, setUrl] = useState(`https://dreamzmeta.com/signup/${userInfo._id}`);
     let url = '';
-    if (userInfo) {
-        url = `https://dreamzmeta.com/signup/${userInfo._id}`;
-    }
+    // if (userInfo) {
+    //     url = `https://dreamzmeta.com/signup/${userInfo._id}`;
+    // }
 
     useEffect(() => {
         dispatch(setPageTitle('Dashboard'));
