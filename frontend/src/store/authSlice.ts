@@ -43,7 +43,7 @@ const initialState: AppState = {
     error: false,
 };
 
-const authSlice = createSlice({
+const authSlice:any = createSlice({
     name: 'auth',
     initialState,
     reducers: {},

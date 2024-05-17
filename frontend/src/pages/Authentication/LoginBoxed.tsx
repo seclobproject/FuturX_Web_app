@@ -33,7 +33,7 @@ const LoginBoxed: React.FC<ComponentProps> = () => {
     return (
         <div>
             <div className="absolute inset-0">
-                <img src="/assets/images/auth/bg-gradient.png" alt="image" className="h-full w-full object-cover" />
+                {/* <img src="/assets/images/auth/bg-gradient.png" alt="image" className="h-full w-full object-cover" /> */}
             </div>
 
             <div className="relative flex min-h-screen items-center  justify-center bg-cover bg-center bg-no-repeat px-6 py-10 dark:bg-[#060818] sm:px-16">

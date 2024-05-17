@@ -209,12 +209,12 @@ const Header = () => {
                             <li>
                                 <NavLink to="/signup">{t('Add New Member')}</NavLink>
                             </li>
-                            {/* <li>
+                            <li>
                                 <NavLink to="/analytics">{t('analytics')}</NavLink>
                             </li>
                             <li>
                                 <NavLink to="/crypto">{t('crypto')}</NavLink>
-                            </li> */}
+                            </li>
                         </ul>
                     </li>
                     <li className="menu nav-item relative">
@@ -244,9 +244,9 @@ const Header = () => {
                             </div>
                         </button>
                         <ul className="sub-menu">
-                            {/* <li>
+                            <li>
                                 <NavLink to="/users/user-account-settings">{t('Add Fund')}</NavLink>
-                            </li> */}
+                            </li>
                             <li>
                                 <NavLink to="/">{t('History')}</NavLink>
                             </li>
