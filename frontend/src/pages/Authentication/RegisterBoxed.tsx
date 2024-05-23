@@ -29,12 +29,10 @@ const RegisterBoxed = () => {
 console.log(errorhandle,"errr handle");
 console.log(error,"errr error");
 
-    // const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Register new member'));
     }, [userInfo]);
 
-    // Reset user data and error state after successful submission
     useEffect(() => {
         if (userData) {
             setUserName('');
@@ -81,10 +79,10 @@ console.log(error,"errr error");
             else if(response.type==='addNewUser/rejected'){
                 setErrorHandle(error)
                 errorMessage2(error)
-                setUserName('');
-                setEmail('');
-                setPassword('');
-                setReEnterPassword('');
+                // setUserName('');
+                // setEmail('');
+                // setPassword('');
+                // setReEnterPassword('');
             }
                
             } catch (error) {
@@ -117,10 +115,9 @@ console.log(error,"errr error");
         });
     };
     const errorMessage2 = (msg: any) => {
-        const errorMsg = typeof msg === 'string' ? msg : JSON.stringify(msg);
         MySwal.fire({
-            title: errorMsg,
-            toast: false,
+            title: `Email or Phone already used!`,
+            toast: true,
             position: 'top-right',
             showConfirmButton: false,
             timer: 5000,

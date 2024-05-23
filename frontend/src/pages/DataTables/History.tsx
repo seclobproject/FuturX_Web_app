@@ -3,15 +3,24 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { setPageTitle } from '../../store/themeConfigSlice';
 import IconBell from '../../components/Icon/IconBell';
-import { getAllTransactions } from '../../store/userSlice';
+import { getAllAdminTransactions, getAllTransactions, getUserDetails } from '../../store/userSlice';
+import { userInfo } from 'os';
 
 const History = () => {
     const dispatch = useAppDispatch();
-    const { loading, data: rowData, error } = useAppSelector((state: any) => state.getAllTransactionsReducer);
+    const { loading, data: rowData, error} = useAppSelector((state: any) => state.getAllTransactionsReducer);
+
+    const { data: userInfo } = useAppSelector((state: any) => state.getUserDetailsReducer);
+
+
+    console.log(userInfo,"user info");
     
     
     useEffect(() => {
-        dispatch(getAllTransactions());
+        // if(userInfo)
+        // dispatch(getAllTransactions());
+        dispatch(getUserDetails());
+        dispatch (getAllTransactions(userInfo))
     }, [dispatch]);
 
     useEffect(() => {

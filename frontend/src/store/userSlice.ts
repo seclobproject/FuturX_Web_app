@@ -237,8 +237,11 @@ export const getAllUsersSlice = createSlice({
 });
 
 // Redux action to get all transactions
-export const getAllTransactions = createAsyncThunk('getAllTransactions', async () => {
+export const getAllTransactions = createAsyncThunk('getAllTransactions', async (userInfo:any) => {
     const token: any = localStorage.getItem('userInfo');
+    
+    console.log(token,"erwer");
+    
     const parsedData = JSON.parse(token);
 
     const config = {
@@ -247,8 +250,8 @@ export const getAllTransactions = createAsyncThunk('getAllTransactions', async (
             'content-type': 'application/json',
         },
     };
+    const response = await axios.get(`${URL}${userInfo.isAdmin?'/api/users/get-all-admin-credits':'/api/users/get-all-transactions'}`, config);
 
-    const response = await axios.get(`${URL}/api/users/get-all-transactions`, config);
     console.log(response,"from back");
 
     return response.data;
@@ -274,6 +277,55 @@ export const getAllTransactionsSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(getAllTransactions.rejected, (state, action) => {
+                state.loading = false;
+                console.error('Error', action.payload);
+
+                if (action.error.message === 'Request failed with status code 500') {
+                    state.error = 'Please make sure you filled all the above details!';
+                } else if (action.error.message === 'Request failed with status code 400') {
+                    state.error = 'Email or Phone already used!';
+                }
+            });
+    },
+});
+
+export const getAllAdminTransactions = createAsyncThunk('getAllAdminTransactions', async () => {
+    const token: any = localStorage.getItem('userInfo');
+    const parsedData = JSON.parse(token);
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${parsedData.access_token}`,
+            'content-type': 'application/json',
+        },
+    };
+
+    const response = await axios.get(`${URL}api/users/get-all-admin-credits`, config);
+    console.log(response,"from back");
+
+    return response.data;
+
+    
+});
+
+export const getAdminAllTransactionsSlice = createSlice({
+    name: 'getAllAdminTransactions',
+    initialState: {
+        loading: false,
+        data: null,
+        error: '',
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAllAdminTransactions.pending, (state: any) => {
+                state.loading = true;
+            })
+            .addCase(getAllAdminTransactions.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getAllAdminTransactions.rejected, (state, action) => {
                 state.loading = false;
                 console.error('Error', action.payload);
 
@@ -739,3 +791,4 @@ export const editUserReducer = editUserSlice.reducer;
 export const getAllUsersReducer = getAllUsersSlice.reducer;
 export const getUserDetailsReducer = getUserDetailsSlice.reducer;
 export const getAllLeaderHistoryReducer = getLeaderWalletHistorySlice.reducer;
+export const getAllAdminTransationReducer= getAdminAllTransactionsSlice.reducer

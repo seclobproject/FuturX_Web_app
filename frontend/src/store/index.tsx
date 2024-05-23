@@ -17,7 +17,8 @@ import {
     getAllTransactionsReducer,
     getRewardReducer,
     getAllUsersToUserReducer,
-    getAllLeaderHistoryReducer
+    getAllLeaderHistoryReducer,
+    getAllAdminTransationReducer
 } from './userSlice';
 
 import {
@@ -71,7 +72,8 @@ const rootReducer = combineReducers({
     getTotalAmountsReducer,
     getAllUsersToUserReducer,
     deleteUserForAdminReducer,
-    getAllLeaderHistoryReducer
+    getAllLeaderHistoryReducer,
+    getAllAdminTransationReducer
 });
 
 const store = configureStore({
