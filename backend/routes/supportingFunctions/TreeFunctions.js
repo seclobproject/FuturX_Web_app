@@ -2,6 +2,7 @@ import User from "../../models/userModel.js";
 import { payUser } from "./payFunction.js";
 
 export const bfsNew = async (startingUser, newUserId, left, right) => {
+  
   // Check if startingUser is null. If so, we don't need to run this function any more. The user is placed on the tree.
   if (!startingUser) {
     return null;
@@ -32,6 +33,7 @@ export const bfsNew = async (startingUser, newUserId, left, right) => {
       if (currentNode.left) {
         queue.push(await User.findById(currentNode.left));
       }
+
       if (currentNode.right) {
         queue.push(await User.findById(currentNode.right));
       }
@@ -45,11 +47,13 @@ export const bfsNew = async (startingUser, newUserId, left, right) => {
     });
 
     // Get sponsor ID to avoid from adding commission twice
+    // NOT NEEDED
     const sponser = await User.findById(newUserId);
     const sponserId = sponser.sponser;
+    // NOT NEEDED
 
     // Add commission to everyone in line up to 4 levels above
-    await addCommissionToLine(currentNode._id, 3, 4);
+    await addCommissionToLine(currentNode._id, 6,sponser);
 
     return {
       currentNodeId: currentNode._id,
@@ -64,11 +68,12 @@ export const bfsNew = async (startingUser, newUserId, left, right) => {
 export const addCommissionToLine = async (
   startingUserId,
   levelsAbove,
-  commissionAmount
+  newUser
 ) => {
   let currentUserId = startingUserId;
   let currentLevel = 0;
 
+  let commissionAmount = [4,4,3,3,2,2,2];
   while (currentUserId && currentLevel <= levelsAbove) {
     if (!currentUserId) {
       break;
@@ -76,61 +81,19 @@ export const addCommissionToLine = async (
 
     const currentUser = await User.findById(currentUserId);
 
-    const commissionToAdd = commissionAmount;
-
+    // const commissionToAdd = commissionAmount;
+    const commissionToAdd = commissionAmount.shift();
     let splitCommission;
 
-    // if (!currentUser.thirtyChecker) {
-    //   currentUser.thirtyChecker = false;
-    // }
-
-    if (!currentUser.totalWallet) {
-      currentUser.totalWallet = currentUser.earning || 0;
-    }
-
-    if (!currentUser.joiningAmount) {
-      currentUser.joiningAmount = 0;
-    }
-
-    if (!currentUser.lastWallet) {
-      currentUser.lastWallet = "earning";
-    }
-
-    if (!currentUser.generationIncome) {
-      currentUser.generationIncome = 0;
-    }
-
-    if (!currentUser.overallIncome) {
-      currentUser.overallIncome = 0;
-    }
-
-    currentUser.overallIncome += 4;
-
-    if (
-      currentUser.overallIncome >= 100 &&
-      currentUser.currentPlan == "promoter"
-    ) {
-      currentUser.currentPlan = "royalAchiever";
-    } else if (
-      currentUser.overallIncome >= 250 &&
-      currentUser.currentPlan == "royalAchiever"
-    ) {
-      currentUser.currentPlan = "crownAchiever";
-    } else if (
-      currentUser.overallIncome >= 600 &&
-      currentUser.currentPlan == "crownAchiever"
-    ) {
-      currentUser.currentPlan = "diamondAchiever";
-    }
+    currentUser.overallIncome += commissionToAdd;
+    currentUser.levelIncome += commissionToAdd;
 
     // Add to transactions history
 
-    if (!currentUser.transactions) {
-      currentUser.transactions = [];
-    }
     currentUser.transactions.push({
-      amount: 4,
+      amount: commissionToAdd,
       category: "levelIncome",
+      basedOnWho:newUser.name
     });
 
     // splitCommission = payUser(commissionToAdd, currentUser, currentUser.thirtyChecker);
@@ -155,151 +118,3 @@ export const addCommissionToLine = async (
     currentLevel++;
   }
 };
-
-// Function to add commission to everyone in line up while level upgrade
-// export const addCommissionToLineForUpgrade = async (
-//   startingUserId,
-//   levelsAbove,
-//   commissionAmount
-// ) => {
-//   let currentUserId = startingUserId;
-//   let currentLevel = 0;
-
-//   while (currentUserId && currentLevel <= levelsAbove) {
-//     if (!currentUserId) {
-//       break;
-//     }
-//     const currentUser = await User.findById(currentUserId);
-
-//     const commissionToAdd = commissionAmount;
-
-//     if (!currentUser.thirtyChecker) {
-//       currentUser.thirtyChecker = false;
-//     }
-
-//     if (!currentUser.totalWallet) {
-//       currentUser.totalWallet = currentUser.earning || 0;
-//     }
-
-//     const levelIncome = splitterTest(
-//       commissionToAdd,
-//       currentUser,
-//       currentUser.thirtyChecker,
-//       currentUser.currentPlan
-//     );
-//     currentUser.earning = levelIncome.earning;
-//     currentUser.joiningAmount = levelIncome.joining;
-//     currentUser.thirtyChecker = levelIncome.checker;
-
-//     if (currentUser.currentPlan == "promoter") {
-//       currentUser.totalWallet = Math.min(
-//         30,
-//         currentUser.totalWallet + levelIncome.addToTotalWallet
-//       );
-//     } else if (currentUser.currentPlan == "royalAchiever") {
-//       currentUser.totalWallet = Math.min(
-//         90,
-//         currentUser.totalWallet + levelIncome.addToTotalWallet
-//       );
-//     } else if (currentUser.currentPlan == "crownAchiever") {
-//       currentUser.totalWallet = Math.min(
-//         90,
-//         currentUser.totalWallet + levelIncome.addToTotalWallet
-//       );
-//     } else if (currentUser.currentPlan == "diamondAchiever") {
-//       currentUser.totalWallet = Math.min(
-//         90,
-//         currentUser.totalWallet + levelIncome.addToTotalWallet
-//       );
-//     }
-
-//     // Save the updated user to the database
-//     await currentUser.save();
-
-//     // Move to the parent of the current user
-//     currentUserId = currentUser.nodeId;
-//     currentLevel++;
-//   }
-// };
-
-// export const splitterTest = (number, sponser, checker, plan) => {
-//   let totalWallet = sponser.totalWallet;
-
-//   let addToTotalWallet = 0;
-
-//   let earningThreshold;
-//   let joiningThreshold;
-
-//   // if (plan == "promoter") {
-//   //   earningThreshold = 30;
-//   //   joiningThreshold = 60;
-//   // } else if (plan == "royalAchiever") {
-//   //   earningThreshold = 60;
-//   //   joiningThreshold = 100;
-//   // } else if (plan == "crownAchiever") {
-//   //   earningThreshold = 100;
-//   //   joiningThreshold = 200;
-//   // } else if (plan == "diamondAchiever") {
-//   //   earningThreshold = 200;
-//   //   joiningThreshold = 200;
-//   // }
-
-//   if (totalWallet <= 30) {
-//     earningThreshold = 30;
-//     joiningThreshold = 60;
-//   } else if (totalWallet <= 90) {
-//     earningThreshold = Math.min(90, 90 - totalWallet);
-//     joiningThreshold = 100;
-//   } else if (totalWallet <= 190) {
-//     earningThreshold = Math.min(190, 190 - totalWallet);
-//     joiningThreshold = 200;
-//   } else if (totalWallet >= 390) {
-//     earningThreshold = 200;
-//     joiningThreshold = 200;
-//   }
-
-//   let earning = sponser.earning;
-//   let joining = sponser.joiningAmount;
-
-//   let remainingEarningSpace;
-//   let remainingJoiningSpace;
-
-//   if (sponser.currentPlan == "promoter") {
-//     remainingEarningSpace = earningThreshold - earning;
-//   } else {
-//     remainingEarningSpace = earningThreshold;
-//   }
-
-//   remainingJoiningSpace = joiningThreshold - joining;
-//   // const remainingEarningSpace = earningThreshold - earning;
-
-//   // Add to earning first
-//   if (remainingEarningSpace > 0 && number > 0 && checker === false) {
-//     const earningToAdd = Math.min(remainingEarningSpace, number);
-//     addToTotalWallet += earningToAdd;
-//     earning += earningToAdd;
-//     number -= earningToAdd;
-
-//     if (earning >= earningThreshold) {
-//       checker = true;
-//     }
-//   }
-
-//   // Add to joining
-//   if (remainingJoiningSpace > 0 && number > 0 && checker === true) {
-//     const joiningToAdd = Math.min(remainingJoiningSpace, number);
-//     joining += joiningToAdd;
-//     number -= joiningToAdd;
-
-//     if (joining >= joiningThreshold) {
-//       checker = false;
-//     }
-//   }
-
-//   // Add remaining to earning
-//   if (number > 0) {
-//     earning += number;
-//   }
-
-//   return { earning, joining, checker, addToTotalWallet };
-// };

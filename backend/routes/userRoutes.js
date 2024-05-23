@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-
+import bcrypt from "bcryptjs";
 import asyncHandler from "../middleware/asyncHandler.js";
 import jwt from "jsonwebtoken";
 import User from "../models/userModel.js";
@@ -16,7 +16,7 @@ import { payUser } from "./supportingFunctions/payFunction.js";
 // Register new user
 // POST: By admin/sponser
 const generateRandomString = () => {
-  const baseString = "DRM";
+  const baseString = "FX";
   const randomDigits = Math.floor(Math.random() * 999999);
   return baseString + randomDigits.toString();
 };
@@ -26,48 +26,49 @@ router.post(
   protect,
   asyncHandler(async (req, res) => {
     const sponser = req.user._id;
-
     const ownSponserId = generateRandomString();
-
+    
     const { name, email, password } = req.body;
-
+    let isLeader=false;
     const existingUser = await User.findOne({ email });
-
+    const sponserData=await User.findById(req.user._id);
     if (existingUser) {
       res.status(400);
       throw new Error("User already exists!");
     }
-
-    const earning = 0;
-    const joiningAmount = 0;
-    const children = [];
-    const currentPlan = "promoter";
-    // const thirtyChecker = false;
+    let leader
+    if(sponserData.isPromoter){
+      isLeader=true;
+    }else if(sponserData.isLeader){
+      leader=sponserData._id
+    }else{
+      leader=sponserData.leader
+    }
+// Hash password
+const hashedPassword = bcrypt.hashSync(password, 10);
     const requestCount = [0, 1, 2, 3, 4];
 
+    
     const user = await User.create({
       sponser,
+      leader,
+      isLeader,
       name,
       email,
-      password,
+      password:hashedPassword,
       ownSponserId,
-      earning,
-      joiningAmount,
-      children,
-      currentPlan,
       requestCount,
-      // thirtyChecker,
     });
 
     if (user) {
-      res.json({
+      res.status(200).json({
         id: user._id,
         sponser: user.sponser,
         name: user.name,
         email: user.email,
-        address: user.address,
         ownSponserId: user.ownSponserId,
         currentPlan: user.currentPlan,
+        msg:"user added successfull"
       });
     } else {
       res.status(400);
@@ -83,44 +84,46 @@ router.post(
 
     const { name, email, password, sponser } = req.body;
 
+    let isLeader=false;
     const existingUser = await User.findOne({ email });
-
+    const sponserData=await User.findById(sponser);
     if (existingUser) {
       res.status(400);
       throw new Error("User already exists!");
     }
+    let leader
+    if(sponserData.isPromoter){
+      isLeader=true;
+    }else if(sponserData.isLeader){
+      leader=sponserData._id
+    }else{
+      leader=sponserData.leader
+    }
+// Hash password
+const hashedPassword = bcrypt.hashSync(password, 10);
+    const requestCount = [0, 1, 2, 3, 4];
 
-    const earning = 0;
-    const joiningAmount = 0;
-    const children = [];
-    const currentPlan = "promoter";
-    const autoPool = false;
-    const thirtyChecker = false;
-
+    
     const user = await User.create({
       sponser,
+      leader,
+      isLeader,
       name,
       email,
-      password,
+      password:hashedPassword,
       ownSponserId,
-      earning,
-      joiningAmount,
-      children,
-      currentPlan,
-      autoPool,
-      thirtyChecker,
+      requestCount,
     });
 
     if (user) {
-      res.json({
+      res.status(200).json({
         id: user._id,
         sponser: user.sponser,
         name: user.name,
         email: user.email,
-        address: user.address,
         ownSponserId: user.ownSponserId,
         currentPlan: user.currentPlan,
-        thirtyChecker: user.thirtyChecker,
+        msg:"user added successfull"
       });
     } else {
       res.status(400);
@@ -134,17 +137,14 @@ router.post(
   "/login",
   asyncHandler(async (req, res) => {
     const { email, password } = req.body;
+    console.log(req.body);
 
     const user = await User.findOne({ email });
-
-    if (user && user.password == password) {
-      // if (user && (await user.matchPassword(password))) {
+    if (user && bcrypt.compareSync(password, user.password)) {
       const token = jwt.sign(
         { userId: user._id },
         "secret_of_jwt_for_dreams-meta_5959",
-        {
-          expiresIn: "800d",
-        }
+        { expiresIn: "800d" }
       );
 
       res.status(200).json({
@@ -158,8 +158,11 @@ router.post(
         autoPool: user.autoPool,
         autoPoolPlan: user.autoPoolPlan,
         autoPoolAmount: user.autoPoolAmount,
+        leaderIncome: user.leaderIncome,
         userStatus: user.userStatus,
         isAdmin: user.isAdmin,
+        isPromoter: user.isPromoter,
+        isLeader: user.isLeader,
         children: user.children,
         token_type: "Bearer",
         access_token: token,
@@ -199,34 +202,22 @@ router.get(
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
 
-    if (user.joiningAmount >= 30) {
-      user.joiningAmount -= 30;
+    if (user.joiningAmount >= 50) {
 
-      // Upgrade user plan from current plan
-      // if (user.currentPlan == "promoter") {
-      //   user.currentPlan = "royalAchiever";
-      // } else if (user.currentPlan == "royalAchiever") {
-      //   user.currentPlan = "crownAchiever";
-      // } else if (
-      //   user.currentPlan == "crownAchiever" ||
-      //   user.currentPlan == "crownAchiever"
-      // ) {
-      //   user.currentPlan = "diamondAchiever";
-      // }
-      // Upgrade user plan from current plan
+      user.joiningAmount -= 50;
 
-      admin.rejoiningWallet += 30;
+      admin.rejoiningWallet += 50;
 
       if (admin.autoPoolBank) {
-        admin.autoPoolBank += 2;
+        admin.autoPoolBank += 5;
       } else {
-        admin.autoPoolBank = 2;
+        admin.autoPoolBank = 5;
       }
 
       if (admin.rewards) {
-        admin.rewards += 3;
+        admin.rewards += 2.5;
       } else {
-        admin.rewards = 3;
+        admin.rewards = 2.5;
       }
 
       const updateAdmin = await admin.save();
@@ -236,9 +227,9 @@ router.get(
 
       // Code to add money to sponsor only
       if (sponser) {
-        sponser.overallIncome += 4;
+        sponser.overallIncome += 12.5;
 
-        const splitCommission = payUser(4, sponser, sponser.lastWallet);
+        const splitCommission = payUser(12.5, sponser, sponser.lastWallet);
 
         sponser.earning = splitCommission.earning;
         sponser.joiningAmount = splitCommission.joining;
@@ -251,7 +242,8 @@ router.get(
         const updatedSponsor = await sponser.save();
 
         if (user.nodeId) {
-          const addCommission = await addCommissionToLine(user.nodeId, 3, 4);
+          
+          const addCommission = await addCommissionToLine(user.nodeId, 7);
 
           const updatedUser = await user.save();
 
@@ -293,9 +285,10 @@ router.put(
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-
+console.log(req.body);
       if (req.body.password) {
-        user.password = req.body.password;
+        const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+          user.password = hashedPassword;
       }
 
       const updatedUser = await user.save();
@@ -354,7 +347,8 @@ router.get(
 );
 
 // Function to fetch users at a specific level for a given userId
-async function getUsersAtLevel(userId, level) {
+async function 
+getUsersAtLevel(userId, level) {
   const user = await User.findById(userId);
   if (!user) {
     return [];
@@ -398,7 +392,7 @@ router.post(
     const users = await getUsersAtLevel(userId, level);
 
     if (users) {
-      res.json(users);
+      res.status(200).json(users);
     } else {
       console.error(error);
       res.status(500).json({ sts: "00", msg: "Some error occured!" });
@@ -406,7 +400,7 @@ router.post(
   })
 );
 
-// Receive joining $30 from user
+// Receive joining $50 from user
 router.post(
   "/join",
   protect,
@@ -418,7 +412,7 @@ router.post(
 
     const joiningRequest = await JoiningRequest.create({
       user: userId,
-      amount: 30,
+      amount: 50,
       hash: hash,
       status: false,
     });
@@ -493,7 +487,7 @@ router.post(
       if (user.earning >= amount) {
         // Check withdrawal eligibility by the number of direct refferals
         if (!user.requestCount || user.requestCount.length == 0) {
-          user.requestCount = [0, 1, 2, 3];
+          user.requestCount = [0, 1, 2, 3,4];
         }
 
         const updateUser = await user.save();
@@ -639,6 +633,78 @@ router.get(
 
     if (user) {
       const transactions = user.transactions;
+      if (transactions.length > 0) {
+        res.status(200).json(transactions);
+      } else {
+        res.status(400).json({
+          sts: "00",
+          msg: "No transactions found!",
+        });
+      }
+    } else {
+      res.status(400).json({
+        sts: "00",
+        msg: "No transactions found!",
+      });
+    }
+  })
+);
+
+router.get(
+  "/get-all-admin-credits",
+  protect,
+  asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    
+    try {
+      const users = await User.aggregate([
+        {
+          $unwind: "$transactions",
+        },
+        {
+          $sort: {
+            "transactions.createdAt": -1,
+          },
+        },
+        {
+          $project: {
+            name: "$transactions.name",
+            amount: "$transactions.amount",
+            category: "$transactions.category",
+            basedOnWho: "$transactions.basedOnWho",
+            createdAt: "$transactions.createdAt",
+          },
+        },
+      ]);
+
+      if (users.length > 0) {
+        res.status(200).json(users);
+      } else {
+        res.status(400).json({
+          sts: "00",
+          msg: "No transactions found!",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        sts: "01",
+        msg: "Server error. Please try again later.",
+        error: error.message,
+      });
+    }
+  })
+);
+
+// Get all leader income history
+router.get(
+  "/get-all-leaderIncomeHistory",
+  protect,
+  asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+
+    if (user) {
+      const transactions = user.leaderIncomeHistory;
       if (transactions.length > 0) {
         res.status(200).json(transactions);
       } else {
