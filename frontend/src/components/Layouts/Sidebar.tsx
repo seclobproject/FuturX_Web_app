@@ -88,7 +88,7 @@ const Sidebar = () => {
                                 <button type="button" className={`${currentMenu === 'dashboard' ? 'active' : ''} nav-link group w-full`} onClick={() => toggleMenu('dashboard')}>
                                     <div className="flex items-center">
                                         <IconMenuDashboard className="group-hover:!text-primary shrink-0" />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Home')}</span>
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Dashboard')}</span>
                                     </div>
 
                                     <div className={currentMenu !== 'dashboard' ? 'rtl:rotate-90 -rotate-90' : ''}>
@@ -98,12 +98,14 @@ const Sidebar = () => {
 
                                 <AnimateHeight duration={300} height={currentMenu === 'dashboard' ? 'auto' : 0}>
                                     <ul className="sub-menu text-gray-500">
-                                        <li>
-                                            <NavLink to="/">{t('Home')}</NavLink>
-                                        </li>
-                                        <li>
-                                            <NavLink to="/signup">{t('Add New Member')}</NavLink>
-                                        </li>
+                                    <li>
+                                <NavLink to="/dashboard">{t('Home')}</NavLink>
+                            </li>
+                            {!userInfo?.isAdmin && (
+  <li>
+    <NavLink to="/signup">{t('Add New Member')}</NavLink>
+  </li>
+)}
                                     </ul>
                                 </AnimateHeight>
                             </li>
@@ -130,16 +132,26 @@ const Sidebar = () => {
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
                                 <span>{t('Network')}</span>
                             </h2>
+                            {userInfo?.isAdmin &&(
 
                             <li className="menu nav-item">
-                                <NavLink to="/direct-sponsors" className="group">
+                                <NavLink to="/all-users" className="group">
                                     <div className="flex items-center">
                                         <IconMenuCharts className="group-hover:!text-primary shrink-0" />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Sponsored Members')}</span>
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Members')}</span>
                                     </div>
                                 </NavLink>
                             </li>
+                        )}
 
+<li className="menu nav-item">
+                                <NavLink to="/direct-sponsors" className="group">
+                                    <div className="flex items-center">
+                                        <IconMenuWidgets className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Direct Team')}</span>
+                                    </div>
+                                </NavLink>
+                            </li>
                             <li className="menu nav-item">
                                 <NavLink to="/genealogy" className="group">
                                     <div className="flex items-center">
@@ -185,25 +197,48 @@ const Sidebar = () => {
                                     </div>
                                 </NavLink>
                             </li>
-
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
-                                <span>{t('Support')}</span>
+                                <span>{t('Histories')}</span>
                             </h2>
 
                             <li className="menu nav-item">
+                                <NavLink to="/history" className="group">
+                                    <div className="flex items-center">
+                                        <IconMenuCharts className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('History')}</span>
+                                    </div>
+                                </NavLink>
+                            </li>
+                            {(userInfo?.isLeader||userInfo?.isPromoter)&&(
+                            <li className="menu nav-item">
+                                <NavLink to="/leader-wallet-history" className="group">
+                                    <div className="flex items-center">
+                                        <IconMenuCharts className="group-hover:!text-primary shrink-0" />
+                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Leader Wallet History')}</span>
+                                    </div>
+                                </NavLink>
+                            </li>
+                            )}
+
+                            {/* <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                                <IconMinus className="w-4 h-5 flex-none hidden" />
+                                <span>{t('Support')}</span>
+                            </h2> */}
+
+                            {/* <li className="menu nav-item">
                                 <NavLink to="/support" className="group">
                                     <div className="flex items-center">
                                         <IconMenuCharts className="group-hover:!text-primary shrink-0" />
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Support Details')}</span>
                                     </div>
                                 </NavLink>
-                            </li>
+                            </li> */}
                             {userInfo && userInfo.isAdmin && (
                                 <>
                                     <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                         <IconMinus className="w-4 h-5 flex-none hidden" />
-                                        <span>{t('Report')}</span>
+                                        <span>{t('Admin')}</span>
                                     </h2>
 
                                     <li className="menu nav-item">
@@ -241,10 +276,18 @@ const Sidebar = () => {
                                             </div>
                                         </NavLink>
                                     </li>
+                                    <li className="menu nav-item">
+                                        <NavLink to="/manage-reward" className="group">
+                                            <div className="flex items-center">
+                                                <IconMenuCharts className="group-hover:!text-primary shrink-0" />
+                                                <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Manage Reward')}</span>
+                                            </div>
+                                        </NavLink>
+                                    </li>
                                 </>
                             )}
 
-                            {/* <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
+                            <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
                                 <span>{t('Digital Visiting Card')}</span>
                             </h2>
@@ -265,7 +308,7 @@ const Sidebar = () => {
                                         <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('View Card')}</span>
                                     </div>
                                 </NavLink>
-                            </li> */}
+                            </li>
                         </ul>
                     </PerfectScrollbar>
                 </div>

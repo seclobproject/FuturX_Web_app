@@ -90,16 +90,23 @@ const Autopool = () => {
                                                 <div>{user.name}</div>
                                             </div>
                                             <span className="text-success text-base px-1 ltr:ml-auto rtl:mr-auto whitespace-pre flex items-center">
-                                                {user && user.currentPlan == 'promoter'
-                                                    ? `Promoter`
-                                                    : user && user.currentPlan == 'royalAchiever'
-                                                    ? 'Royal Achiever'
-                                                    : user && user.currentPlan == 'crownAchiever'
-                                                    ? 'Crown Achiever'
-                                                    : user && user.currentPlan == 'diamondAchiever'
-                                                    ? 'Diamond Achiever'
-                                                    : 'Promoter'}
+                                                {user && user.currentPlan == 'beginner'
+                                                    ? `Beginner`
+                                                    : user && user.currentPlan == 'bronze'
+                                                    ? 'Bronze'
+                                                    : user && user.currentPlan == 'silver'
+                                                    ? 'Silver'
+                                                    : user && user.currentPlan == 'gold'
+                                                    ? 'Gold'
+                                                    : user && user.currentPlan == 'platinum'
+                                                    ? 'Platinum'
+                                                    : user && user.currentPlan == 'diamond'
+                                                    ? 'Diamond'
+                                                    : user && user.currentPlan == 'star'
+                                                    ? 'Star'
+                                                    : 'Beginner'}
                                             </span>
+
                                         </div>
                                     </div>
                                 ))}

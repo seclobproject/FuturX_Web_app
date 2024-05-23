@@ -38,6 +38,7 @@ export const addNewUser = createAsyncThunk('addNewUser', async (user: any) => {
     );
 
     return response.data;
+    
 });
 
 // export const clearData = createAsyncThunk('logout', async () => {
@@ -60,17 +61,21 @@ export const getAddNewUser = createSlice({
             .addCase(addNewUser.fulfilled, (state, action) => {
                 state.loading = false;
                 state.data = action.payload;
+                console.log(action,"34");
+                
                 // localStorage.removeItem('userInfo');
                 // localStorage.setItem('userInfo', JSON.stringify(action.payload));
             })
             .addCase(addNewUser.rejected, (state, action) => {
                 state.loading = false;
-                console.error('Error', action.payload);
+                console.error('Error testestet', action);
 
                 if (action.error.message === 'Request failed with status code 500') {
                     state.error = 'Please make sure you filled all the above details!';
                 } else if (action.error.message === 'Request failed with status code 400') {
                     state.error = 'Email or Phone already used!';
+                }else{
+
                 }
             });
     },
@@ -146,6 +151,7 @@ export const editUserProfile = createAsyncThunk('editUserProfile', async (user: 
             name: user.userName,
             email: user.email,
             password: user.password,
+            userId:user.id
         },
         config
     );
@@ -243,8 +249,11 @@ export const getAllTransactions = createAsyncThunk('getAllTransactions', async (
     };
 
     const response = await axios.get(`${URL}/api/users/get-all-transactions`, config);
+    console.log(response,"from back");
 
     return response.data;
+
+    
 });
 
 export const getAllTransactionsSlice = createSlice({
@@ -667,6 +676,53 @@ export const getAllUsersToUserSlice = createSlice({
             });
     },
 });
+///get leader wallet
+export const getLeaderWalletHistory = createAsyncThunk('getLeaderWalletHistory', async () => {
+    const token: any = localStorage.getItem('userInfo');
+    const parsedData = JSON.parse(token);
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${parsedData.access_token}`,
+            'content-type': 'application/json',
+        },
+    };
+
+    const response = await axios.get(`${URL}/api/users/get-all-leaderIncomeHistory`, config);
+console.log(response,"from anju");
+
+    return response.data;
+});
+
+export const getLeaderWalletHistorySlice = createSlice({
+    name: 'getLeaderWalletHistorySlice',
+    initialState: {
+        loading: false,
+        data: null,
+        error: '',
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(getLeaderWalletHistory.pending, (state: any) => {
+                state.loading = true;
+            })
+            .addCase(getLeaderWalletHistory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getLeaderWalletHistory.rejected, (state, action) => {
+                state.loading = false;
+                console.error('Error', action.payload);
+
+                if (action.error.message === 'Request failed with status code 500') {
+                    state.error = 'Please make sure you filled all the above details!';
+                } else if (action.error.message === 'Request failed with status code 400') {
+                    state.error = 'Email or Phone already used!';
+                }
+            });
+    },
+});
 
 export const getAllUsersToUserReducer = getAllUsersToUserSlice.reducer;
 export const getRewardReducer = getRewardSlice.reducer;
@@ -682,3 +738,4 @@ export const addNewUserByReferralReducer = addNewUserWithRefferalSlice.reducer;
 export const editUserReducer = editUserSlice.reducer;
 export const getAllUsersReducer = getAllUsersSlice.reducer;
 export const getUserDetailsReducer = getUserDetailsSlice.reducer;
+export const getAllLeaderHistoryReducer = getLeaderWalletHistorySlice.reducer;

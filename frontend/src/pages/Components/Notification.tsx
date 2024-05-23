@@ -646,4 +646,5 @@ const coloredToast = (color: any) => {
     );
 };
 
+
 export default Notification;

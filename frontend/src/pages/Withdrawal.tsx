@@ -35,15 +35,6 @@ const Withdrawal = () => {
 
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
-    // useEffect(() => {
-    //     const intervalId = setInterval(() => {
-    //         const currentHour = currentDateTime.getHours();
-    //         const currentMinute = currentDateTime.getMinutes();
-    //         setShowButton(currentHour === 17 || (currentHour > 17 && currentHour < 21));
-    //     }, 1000);
-
-    //     return () => clearInterval(intervalId);
-    // }, []);
 
     const submitHandlerToWallet = async (type: number) => {
         if (type === 9) {
@@ -143,7 +134,9 @@ const Withdrawal = () => {
 
     return (
         <div>
+          
             <div className="flex flex-col items-center">
+   
                 <div className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white px-6 py-3 rounded-xl flex items-center mb-5">
                     <h2 className="text-lg font-semibold">Current wallet balance: {userInfo && userInfo.earning}</h2>
                 </div>
@@ -168,7 +161,9 @@ const Withdrawal = () => {
                     )}
                     {message && <div className="text-center">Submitted successfully!</div>}
                 </form>
+          
             </div>
+        
         </div>
     );
 };

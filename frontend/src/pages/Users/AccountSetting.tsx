@@ -38,7 +38,7 @@ const AccountSetting = () => {
 
     const profileEditHandler = (e: any) => {
         e.preventDefault();
-        dispatch(editUserProfile({ userName, email, password }));
+        dispatch(editUserProfile({ userName, email, password ,id:userInfo?._id}));
         if (userInfo) {
             showMessage2();
         }
@@ -48,7 +48,6 @@ const AccountSetting = () => {
         <div>
             <div className="pt-5">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">Settings</h5>
                 </div>
                 <div>
                     <ul className="sm:flex font-semibold border-b border-[#ebedf2] dark:border-[#191e3a] mb-5 whitespace-nowrap overflow-y-auto">

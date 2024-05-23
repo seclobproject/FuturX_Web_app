@@ -170,10 +170,13 @@ const EditUserByAdmin = () => {
                                     <div>
                                         <label htmlFor="currentPlan">Select Rank</label>
                                         <select id="currentPlan" value={currentPlan} onChange={(e: any) => setCurrentPlan(e.target.value)} className="form-input">
-                                            <option value="promoter">Promoter</option>
-                                            <option value="royalAchiever">Royal Achiever</option>
-                                            <option value="crownAchiever">Crown Achiever</option>
-                                            <option value="diamondAchiever">Diamond Achiever</option>
+                                            <option value="beginner">Beginner</option>
+                                            <option value="bronze">Bronze</option>
+                                            <option value="silver">Silver</option>
+                                            <option value="gold">Gold</option>
+                                            <option value="platinum">Platinum</option>
+                                            <option value="diamond">Diamond</option>
+                                            <option value="star">Star</option>
                                         </select>
                                     </div>
                                     <div className="mt-6">

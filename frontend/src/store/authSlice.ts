@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { URL } from '../Constants';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
 // Typescript codes to define type
 interface UserInfo {
@@ -14,6 +16,7 @@ interface AppState {
     error: boolean;
 }
 // Typescript codes to define type
+const MySwal = withReactContent(Swal);
 
 // Redux action to get user
 export const fetchUser = createAsyncThunk('fetchUser', async (data: any) => {
@@ -68,5 +71,7 @@ const authSlice:any = createSlice({
         });
     },
 });
+
+
 
 export default authSlice.reducer;

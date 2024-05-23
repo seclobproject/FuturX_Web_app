@@ -14,6 +14,7 @@ import WithdrawHistory from '../pages/DataTables/WithdrawHistory';
 import Reports from '../pages/DataTables/Reports';
 import History from '../pages/DataTables/History';
 import AllUsers from '../pages/DataTables/AllUsers';
+import LeaderHistory from '../pages/DataTables/LeaderHistory';
 const Index = lazy(() => import('../pages/Index'));
 const Finance = lazy(() => import('../pages/Finance'));
 const Cards = lazy(() => import('../pages/Components/Cards'));
@@ -57,6 +58,10 @@ const routes = [
     {
         path: '/history',
         element: <History />,
+    },
+    {
+        path: '/leader-wallet-history',
+        element: <LeaderHistory />,
     },
     {
         path: '/direct-sponsors',
@@ -195,6 +200,12 @@ const routes = [
         element: <RecoverIdBoxed />,
         layout: 'blank',
     },
+    {
+        path: '/auth/boxed-password-reset',
+        element: <RecoverIdBoxed />,
+        layout: 'blank',
+    },
+  
    
     {
         path: '*',

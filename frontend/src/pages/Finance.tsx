@@ -30,6 +30,9 @@ const Finance = () => {
 
     const { data: userInfo } = useAppSelector((state: any) => state.getUserDetailsReducer);
 
+    console.log(userInfo,"userInfo");
+    
+
     const { loading: joiningLoading, data: joiningData, error: joiningError } = useAppSelector((state: any) => state.sendJoiningRequestReducer);
 
     const { data: upgradeInfo, error: upgradeError } = useAppSelector((state: any) => state.upgradeUserReducer);
@@ -181,39 +184,53 @@ const Finance = () => {
     useEffect(() => {
         dispatch(upgradeUser());
     }, [dispatch]);
-
+ 
     return (
         <div>
-            <div className="pt-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-white">
-                    <div className="panel">
-                        <div className="flex items-center justify-between mb-5">
-                            <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
-                            <Link to="/users/user-account-settings" className="ltr:ml-auto rtl:mr-auto p-2 rounded-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                                <IconPencilPaper />
-                            </Link>
-                        </div>
+                  <div className="panel"  style={{margin:'20px'}}>
+                    <div className="flex items-center justify-between mb-5 ">
+    <div className="flex items-center">
+        <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
+        <Link to="/users/user-account-settings" className="ml-3 p-2 rounded-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800">
+            <IconPencilPaper />
+        </Link>
+    </div>
+    <div className="flex items-center">
+        <WalletConnectButton />
+        {address && userInfo && userInfo.userStatus == false && (
+            <button type="button" onClick={async () => await approvalWrite()} className="btn btn-outline-success ml-3">
+                Activate account
+            </button>
+        )}
+    </div>
+</div>
+
                         <div className="flex flex-col justify-center">
-                            <div className="flex flex-wrap justify-evenly items-center gap-5 sm:gap-0">
+                            <div className="flex flex-wrap justify-center items-center gap-5 sm:gap-6">
                                 <img className="w-[80px] h-[80px] sm:w-[150px] sm:h-[150px] rounded-full object-cover" src="/assets/images/user-silhouette.png" alt="" />
                                 <div>
                                     <div className="flex flex-col">
-                                        {/* <img src="/assets/images/user-silhouette.png" alt="img" className="w-16 h-16 rounded-full object-cover  mb-5" /> */}
                                         <p className="font-semibold text-primary text-xl">{userInfo && userInfo.name}</p>
                                     </div>
                                     <ul className="mt-5 flex flex-col max-w-[170px] m-auto space-y-4 font-semibold text-white-dark">
                                         <li className="flex items-center gap-2">User ID: {userInfo && userInfo.ownSponserId}</li>
                                         <li className="flex items-center gap-2">
                                             Rank:{' '}
-                                            {userInfo && userInfo.currentPlan == 'promoter'
-                                                ? `Promoter`
-                                                : userInfo && userInfo.currentPlan == 'royalAchiever'
-                                                ? 'Royal Achiever'
-                                                : userInfo && userInfo.currentPlan == 'crownAchiever'
-                                                ? 'Crown Achiever'
-                                                : userInfo && userInfo.currentPlan == 'diamondAchiever'
-                                                ? 'Diamond Achiever'
-                                                : 'Promoter'}
+                                            {userInfo && userInfo.currentPlan == 'beginner'
+                                                    ? `Beginner`
+                                                    : userInfo && userInfo.currentPlan == 'bronze'
+                                                    ? 'Bronze'
+                                                    : userInfo && userInfo.currentPlan == 'silver'
+                                                    ? 'Silver'
+                                                    : userInfo && userInfo.currentPlan == 'gold'
+                                                    ? 'Gold'
+                                                    : userInfo && userInfo.currentPlan == 'platinum'
+                                                    ? 'Platinum'
+                                                    : userInfo && userInfo.currentPlan == 'diamond'
+                                                    ? 'Diamond'
+                                                    : userInfo && userInfo.currentPlan == 'star'
+                                                    ? 'Star'
+                                                    : 'Beginner'}
                                         </li>
                                         <li>
                                             Account Status:{' '}
@@ -223,12 +240,7 @@ const Finance = () => {
                                             Auto Pool:{' '}
                                             {userInfo && userInfo.autoPool == false ? <span className="text-red-700">Not Activated</span> : <span className="text-green-600">Activated</span>}
                                         </li>
-                                        <WalletConnectButton />
-                                        {address && userInfo && userInfo.userStatus == false && (
-                                            <button type="button" onClick={async () => await approvalWrite()} className="btn btn-outline-success">
-                                                Activate account
-                                            </button>
-                                        )}
+                                       
                                     </ul>
                                     <div className="text-center mt-5">
                                         {userInfo && userInfo.joiningRequest && userInfo.joiningRequest.status == false && <>You are successfully sent your join request. You will be verified soon.</>}
@@ -236,7 +248,6 @@ const Finance = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* Copy refferal link */}
                             <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                 <div className="flex justify-between">
                                     <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Referral Link</div>
@@ -297,7 +308,58 @@ const Finance = () => {
                             )}
                         </div>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+            <div className="pt-5">
+          <div className="flex flex-wrap">
+  <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 m-2 flex-1">
+    <div className="flex justify-between">
+      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Wallet Amount</div>
+    </div>
+    <div className="flex flex-col justify-center mt-5">
+      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+        ${userInfo && userInfo.earning.toFixed(2)}
+      </div>
+    </div>
+    {userInfo && userInfo.showWithdraw === true && userInfo.userStatus === true && (
+      <>
+        <button
+          type="button"
+          onClick={() => navigate('/withdraw')}
+          className="btn rounded-lg p-2 mt-4 text-white"
+        >
+          Withdraw
+        </button>
+        <div className="mt-3">
+          Amount will be credited to your account within 24 hours
+        </div>
+      </>
+    )}
+  </div>
+
+  <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 m-2 flex-1">
+    <div className="flex justify-between">
+      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Rejoining Wallet Amount</div>
+    </div>
+    <div className="flex items-center justify-between mt-5">
+      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+        ${userInfo && userInfo.joiningAmount.toFixed(2)}
+      </div>
+      <button
+        type="button"
+        onClick={upgradeHandler}
+        className="btn rounded-lg p-2 mt-4 text-white"
+      >
+        Rejoin
+      </button>
+    </div>
+    {rejoinMessage === 1 && <div className="mt-2">You are successfully upgraded.</div>}
+    {rejoinMessage === 2 && <div className="mt-2">You are not eligible for upgrade as of now</div>}
+  </div>
+</div>
+
+        
+                        
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{margin:"10px"}}>
                         {/* Total income generated */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
@@ -309,41 +371,18 @@ const Finance = () => {
                         </div>
 
                         {/* Wallet amount and withdrawal */}
-                        <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                            <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Wallet Amount</div>
-                            </div>
-                            <div className="flex flex-col justify-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.earning.toFixed(2)}</div>
-                            </div>
-                            {userInfo && userInfo.showWithdraw == true && userInfo.userStatus == true && (
-                                <>
-                                    <button type="button" onClick={() => navigate('/withdraw')} className="btn rounded-lg p-2 mt-4 text-white">
-                                        Withdraw
-                                    </button>
-                                    <div className="mt-3">Amount will be credited to your account within 24 hours</div>
-                                </>
-                            )}
-                            {/* {!showButton && (
-                                <div className="mt-2">
-                                    <TimerComponent />
-                                </div>
-                            )} */}
-                        </div>
-
+                      
+                       
                         {/*  Time On-Site */}
+                        
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Rejoining Wallet Amount</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Direct Referrals</div>
                             </div>
-                            <div className="flex items-center justify-between mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.joiningAmount.toFixed(2)}</div>
-                                <button type="button" onClick={upgradeHandler} className="btn rounded-lg p-2 mt-4 text-white">
-                                    Rejoin
-                                </button>
+                            <div className="flex items-center mt-5">
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {userInfo && userInfo.children.length} </div>
+                                {/* <div className="badge bg-white/30">- 2.35% </div> */}
                             </div>
-                            {rejoinMessage == 1 && <>You are successfully upgraded.</>}
-                            {rejoinMessage == 2 && <>You are not eligible for upgrade as of now</>}
                         </div>
 
                         {/* Generation income (Level income) */}
@@ -359,7 +398,7 @@ const Finance = () => {
                         {/* Sponsorship income (Direct refferal income) */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Sponsorship Income</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Sponsership Income</div>
                             </div>
                             <div className="flex flex-col justify-center mt-5">
                                 <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.sponsorshipIncome.toFixed(2)}</div>
@@ -387,17 +426,31 @@ const Finance = () => {
                         </div>
 
                         {/* Total direct refferals */}
-                        <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                            <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Direct Referrals</div>
-                            </div>
-                            <div className="flex items-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {userInfo && userInfo.children.length} </div>
-                                {/* <div className="badge bg-white/30">- 2.35% </div> */}
-                            </div>
-                        </div>
+                        {(userInfo?.isLeader||userInfo?.isPromoter)&&(
+ <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+ <div className="flex justify-between">
+     <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Leader wallet</div>
+ </div>
+ <div className="flex items-center mt-5">
+     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {userInfo && userInfo.leaderIncome} </div>
+     {/* <div className="badge bg-white/30">- 2.35% </div> */}
+ </div>
+</div>
+                        )}
+                       
+                   
                     </div>
+              
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6 text-white" style={{marginTop:"10px"}}>
+                  
+                
+                  
                 </div>
+             
+              
+                  
+               
 
                 {/* <div className="mb-5 flex items-center">
                     <div className="w-full shadow-[4px_6px_10px_-3px_#bfc9d4] rounded border border-white-light dark:border-[#1b2e4b] panel p-0 dark:shadow-none">
@@ -433,7 +486,7 @@ const Finance = () => {
                     </div>
                 </div> */}
 
-                {/* <div className="mb-5 flex items-center">
+                <div className="mb-5 flex items-center">
                     <div className="w-full shadow-[4px_6px_10px_-3px_#bfc9d4] rounded border border-white-light dark:border-[#1b2e4b] panel p-0 dark:shadow-none">
                         <div className="px-5 pt-5 flex justify-evenly items-center flex-col sm:flex-row">
                             <div className="ltr:sm:pl-5 rtl:sm:pr-5 text-center sm:text-left">
@@ -447,11 +500,11 @@ const Finance = () => {
                             </div>
 
                             <div className="overflow-hidden">
-                                <img src="/assets/images/digital-card.png" alt="profile" className="w-60 mt-5 object-cover" />
+                                <img src="/assets/images/Group 47923.png" alt="profile" className="w-60 mt-5 object-cover" />
                             </div>
                         </div>
                     </div>
-                </div> */}
+                </div>
             </div>
         </div>
     );

@@ -5,6 +5,8 @@ import { setPageTitle, toggleRTL } from '../../store/themeConfigSlice';
 import IconMail from '../../components/Icon/IconMail';
 import IconLockDots from '../../components/Icon/IconLockDots';
 import { fetchUser } from '../../store/authSlice';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
 interface ComponentProps {
     data?: any;
@@ -13,6 +15,7 @@ interface ComponentProps {
 const LoginBoxed: React.FC<ComponentProps> = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal);
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -20,14 +23,29 @@ const LoginBoxed: React.FC<ComponentProps> = () => {
 
     const { pending, userInfo, error } = useAppSelector((state: any) => state.authReducer);
 
+    console.log(userInfo,"user");
+    
     useEffect(() => {
         // dispatch(setPageTitle('Login'));
         if (userInfo) navigate(`/dashboard`);
     }, [userInfo, navigate]);
 
+    const showMessage2 = () => {
+        MySwal.fire({
+            title: `Login Successfull`,
+            toast: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
     const submitForm = (e: any) => {
         e.preventDefault();
         dispatch(fetchUser({ email, password }));
+        if(userInfo){
+            showMessage2()
+                }
     };
 
     return (
@@ -46,7 +64,7 @@ const LoginBoxed: React.FC<ComponentProps> = () => {
                         <div className="mx-auto w-full max-w-[440px]">
                             <div className="main-logo flex justify-center shrink-0 mb-10">
                                 <div className="dark:block hidden">
-                                    <img className="w-36 md:w-48 ml-[5px] flex-none" src="/assets/images/logo.png" alt="logo" style={{ width: '100px' }} />
+                                    <img className="w-36 md:w-48 ml-[5px] flex-none" src="/assets/images/logo in white letter-01.png" alt="logo" style={{ width: '100px' }} />
                                 </div>
                                 <div className="visible dark:hidden">
                                     <img className="w-36 md:w-48 ml-[5px] flex-none" src="logo in white letter-01.png" alt="logo" style={{ width: '100px' }} />

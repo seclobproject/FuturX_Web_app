@@ -1,20 +1,21 @@
+import React, { useEffect, useState } from 'react'
+import { useAppDispatch, useAppSelector,  } from '../../store';
+import {  getLeaderWalletHistory } from '../../store/userSlice';
 import { DataTable } from 'mantine-datatable';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../store';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import IconBell from '../../components/Icon/IconBell';
-import { getAllUsers } from '../../store/userSlice';
 
-const Skin = () => {
+function LeaderHistory() {
     const dispatch = useAppDispatch();
-    const { loading, data: rowData, error } = useAppSelector((state: any) => state.getAllUsersReducer);
-
+    const { data: rowData, error } = useAppSelector((state: any) => state.getAllLeaderHistoryReducer);
+    console.log(rowData,"reowdata");
+    
+    
     useEffect(() => {
-        dispatch(getAllUsers());
+        dispatch(getLeaderWalletHistory());
     }, [dispatch]);
 
     useEffect(() => {
-        dispatch(setPageTitle('Skin Tables'));
+        dispatch(setPageTitle('Leader Wallet History'));
     });
     const PAGE_SIZES = [10, 20, 30, 50, 100];
 
@@ -22,9 +23,10 @@ const Skin = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [initialRecords, setInitialRecords] = useState(rowData || []);
-    const [recordsData, setRecordsData] = useState(initialRecords);
+    const [recordsData, setRecordsData]= useState(initialRecords);
 
-    recordsData && console.log(recordsData);
+    console.log(recordsData,"recordsData");
+    
 
     const [search, setSearch] = useState('');
 
@@ -42,22 +44,33 @@ const Skin = () => {
         setInitialRecords(() => {
             return (rowData || []).filter((item: any) => {
                 return (
-                    item.name.toLowerCase().includes(search.toLowerCase()) ||
-                    item.email.toLowerCase().includes(search.toLowerCase()) ||
-                    item.ownSponserId.toLowerCase().includes(search.toLowerCase()) ||
-                    item.userStatus.toLowerCase().includes(search.toLowerCase())
+                    item.category.toLowerCase().includes(search.toLowerCase())
                 );
             });
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, rowData]);
-
-    return (
-        <div className="space-y-6">
+    const formatDate = (date: any) => {
+        if (date) {
+            const dt = new Date(date);
+            const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
+            const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
+            const year = dt.getFullYear();
+            const hours = dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours();
+            const minutes = dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes();
+            const seconds = dt.getSeconds() < 10 ? '0' + dt.getSeconds() : dt.getSeconds();
+    
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        }
+        return '';
+    };
+  return (
+    <>
+     <div className="space-y-6">
             {/* Skin: Striped  */}
             <div className="panel">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">Direct Team</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light"> Leader Wallet History</h5>
                     {/* <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} /> */}
                 </div>
                 <div className="datatables">
@@ -66,10 +79,14 @@ const Skin = () => {
                         className="whitespace-nowrap table-striped"
                         records={recordsData}
                         columns={[
-                            { accessor: 'ownSponserId', title: 'ID' },
-                            { accessor: 'name', title: 'Name' },
-                            { accessor: 'email', title: 'Email' },
-                            { accessor: 'userStatus', title: 'Status', render: (value) => (value ? 'Active' : 'Inactive') },
+                            {
+                                accessor: 'createdAt',
+                                title: 'Date and Time',
+                                render: ({ createdAt }) => <div>{formatDate(createdAt)}</div>,
+                            },
+                            { accessor: 'category', title: 'Category' },
+                            { accessor: 'basedOnWho', title: 'Sponsored Member' },
+                            { accessor: 'amount', title: 'Amount' },
                         ]}
                         totalRecords={initialRecords ? initialRecords.length : 0}
                         recordsPerPage={pageSize}
@@ -83,7 +100,8 @@ const Skin = () => {
                 </div>
             </div>
         </div>
-    );
-};
+    </>
+  )
+}
 
-export default Skin;
+export default LeaderHistory

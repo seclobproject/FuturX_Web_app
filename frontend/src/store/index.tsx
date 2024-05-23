@@ -16,7 +16,8 @@ import {
     addToSavingsReducer,
     getAllTransactionsReducer,
     getRewardReducer,
-    getAllUsersToUserReducer
+    getAllUsersToUserReducer,
+    getAllLeaderHistoryReducer
 } from './userSlice';
 
 import {
@@ -69,7 +70,8 @@ const rootReducer = combineReducers({
     getRewardReducer,
     getTotalAmountsReducer,
     getAllUsersToUserReducer,
-    deleteUserForAdminReducer
+    deleteUserForAdminReducer,
+    getAllLeaderHistoryReducer
 });
 
 const store = configureStore({

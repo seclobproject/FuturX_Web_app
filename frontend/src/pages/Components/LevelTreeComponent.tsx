@@ -45,8 +45,8 @@ const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
         <div className="space-y-6">
             <div className="panel">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">Members</h5>
-                    <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} />
+                    <h5 className="font-semibold text-lg dark:text-white-light">Genealogy</h5>
+                    {/* <input type="text" className="form-input w-auto" placeholder="Search..." value={search2} onChange={(e) => setSearch2(e.target.value)} /> */}
                 </div>
                 <div className="datatables">
                     <DataTable
@@ -54,11 +54,11 @@ const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
                         className="whitespace-nowrap table-striped"
                         records={recordsData2}
                         columns={[
+                            { accessor: 'ownSponserId', title: 'ID' },
                             { accessor: 'name', title: 'Name' },
                             { accessor: 'email', title: 'Email' },
-                            { accessor: 'ownSponserId', title: 'Sponsor ID' },
-                            { accessor: 'userStatus', title: 'Status', render: (value) => (value ? 'Active' : 'Inactive') },
                             { accessor: 'currentPlan', title: 'Current Rank' },
+                            { accessor: 'userStatus', title: 'Status', render: (value) => (value ? 'Active' : 'Inactive') },
                         ]}
                         totalRecords={initialRecords2 ? initialRecords2.length : 0}
                         recordsPerPage={pageSize2}

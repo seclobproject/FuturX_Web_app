@@ -9,10 +9,13 @@ import IconLockDots from '../../components/Icon/IconLockDots';
 import IconPhoneCall from '../../components/Icon/IconPhoneCall';
 import { addNewUser } from '../../store/userSlice';
 import { logout } from '../../store/authSlice';
+import withReactContent from 'sweetalert2-react-content';
+import Swal from 'sweetalert2';
 
 const RegisterBoxed = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const MySwal = withReactContent(Swal);
 
     const [userName, setUserName] = useState('');
     const [email, setEmail] = useState('');
@@ -22,6 +25,9 @@ const RegisterBoxed = () => {
 
     const { loading, data: userData, error } = useAppSelector((state: any) => state.addNewUserReducer);
     const { userInfo } = useAppSelector((state: any) => state.authReducer);
+    const [errorhandle, setErrorHandle] = useState('');
+console.log(errorhandle,"errr handle");
+console.log(error,"errr error");
 
     // const dispatch = useDispatch();
     useEffect(() => {
@@ -38,24 +44,90 @@ const RegisterBoxed = () => {
         }
     }, [userData]);
 
-    // Redirect to signin page if user is not logged in
     useEffect(() => {
         if (!userInfo) {
             navigate('/signin');
         }
     }, [userInfo]);
 
-    const submitForm = (e: any) => {
+    useEffect(()=>{
+        if(error.length){
+            setErrorHandle(error)
+        }
+    },[error]);
+
+    const submitForm = async (e: any) => {
         e.preventDefault();
         const data = { userName, email, password };
+        if (!userName || !email || !password || !reEnterPassword) {
+            setErrorHandle('All fields are required.');
+            return;
+        }
         if (password !== reEnterPassword) {
-            alert('Passwords do not match');
+            errorMessage();
             return;
         } else {
-            dispatch(addNewUser(data));
+            try {
+              const response =  await dispatch(addNewUser(data)); 
+            console.log("resposne: ", response);
+            if(response.type==='addNewUser/fulfilled'){
+                showMessage2()
+                setUserName('');
+                setEmail('');
+                setPassword('');
+                setReEnterPassword('');
+                navigate('/dashboard');       
+            }
+            else if(response.type==='addNewUser/rejected'){
+                setErrorHandle(error)
+                errorMessage2(error)
+                setUserName('');
+                setEmail('');
+                setPassword('');
+                setReEnterPassword('');
+            }
+               
+            } catch (error) {
+                console.error('Failed to add new user:', error);
+                
+            }
         }
     };
 
+
+    const showMessage2 = () => {
+        MySwal.fire({
+            title: `User Added Successfully`,
+            toast: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
+
+    const errorMessage = () => {
+        MySwal.fire({
+            title: 'Passwords do not match',
+            toast: false,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
+    const errorMessage2 = (msg: any) => {
+        const errorMsg = typeof msg === 'string' ? msg : JSON.stringify(msg);
+        MySwal.fire({
+            title: errorMsg,
+            toast: false,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
+    
     return (
         <div>
             <div className="absolute inset-0">
@@ -90,7 +162,11 @@ const RegisterBoxed = () => {
                                         <input
                                             id="userName"
                                             value={userName}
-                                            onChange={(e) => setUserName(e.target.value)}
+                                            onChange={(e) => {
+                                                setUserName(e.target.value);
+                                                setErrorHandle('');
+                                            }}
+                                            
                                             type="text"
                                             placeholder="Enter User Name"
                                             className="form-input ps-10 placeholder:text-white-dark"
@@ -107,7 +183,10 @@ const RegisterBoxed = () => {
                                         <input
                                             id="Email"
                                             value={email}
-                                            onChange={(e) => setEmail(e.target.value)}
+                                            onChange={(e) => {
+                                                setEmail(e.target.value)
+                                                setErrorHandle('')
+                                            }}
                                             type="email"
                                             placeholder="Enter Email"
                                             className="form-input ps-10 placeholder:text-white-dark"
@@ -121,7 +200,10 @@ const RegisterBoxed = () => {
                                 <div>
                                     <div className="flex items-center justify-between">
                                         <label htmlFor="Password">Password</label>
-                                        <div onClick={() => setShowPass(!showPass)} className="hover:underline hover:cursor-pointer">
+                                        <div onClick={() => {
+                                            setShowPass(!showPass)
+                                            setErrorHandle('')
+                                            }} className="hover:underline hover:cursor-pointer">
                                             Show Password
                                         </div>
                                     </div>
@@ -129,7 +211,10 @@ const RegisterBoxed = () => {
                                         <input
                                             id="Password"
                                             value={password}
-                                            onChange={(e) => setPassword(e.target.value)}
+                                            onChange={(e) => {
+                                                setPassword(e.target.value)
+                                                setErrorHandle('')
+                                            }}
                                             type={showPass ? `text` : `password`}
                                             placeholder="Enter Password"
                                             className="form-input ps-10 placeholder:text-white-dark"
@@ -141,14 +226,14 @@ const RegisterBoxed = () => {
                                     </div>
                                 </div>
                                 <div>
-                                    <label htmlFor="Password">Re-enter Password</label>
+                                    <label htmlFor="Password">Confirm Password</label>
                                     <div className="relative text-white-dark">
                                         <input
                                             id="Password"
                                             value={reEnterPassword}
                                             type={showPass ? `text` : `password`}
                                             onChange={(e) => setReEnterPassword(e.target.value)}
-                                            placeholder="Re-enter Password"
+                                            placeholder="Confirm Password"
                                             className="form-input ps-10 placeholder:text-white-dark"
                                             required
                                         />
@@ -163,8 +248,8 @@ const RegisterBoxed = () => {
                                 </button>
                             </form>
                             <div className="text-center mt-7 dark:text-white">
-                                {userData && <div>Submitted successfully!</div>}
-                                {error && <div className="text-red-600">{error}</div>}
+                                {/* {userData && <div>Submitted successfully!</div>} */}
+                                {errorhandle && <div className="text-red-600">{errorhandle}</div>}
                             </div>
                         </div>
                     </div>

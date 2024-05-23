@@ -69,6 +69,18 @@ const LevelTree = () => {
         setActiveTab(4);
         // dispatch(getUsersByLevel(4));
     };
+    const levelFiveHandler = () => {
+        setActiveTab(5);
+        // dispatch(getUsersByLevel(4));
+    };
+    const levelSixHandler = () => {
+        setActiveTab(6);
+        // dispatch(getUsersByLevel(4));
+    };
+    const levelSevenHandler = () => {
+        setActiveTab(7);
+        // dispatch(getUsersByLevel(4));
+    };
 
     return (
         <div className="inline-block w-full">
@@ -109,6 +121,33 @@ const LevelTree = () => {
                         Level 4
                     </div>
                 </li>
+                
+                <li>
+                    <div
+                        className={`${activeTab === 5 ? 'bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white' : ''} block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
+                        onClick={levelFiveHandler}
+                    >
+                        Level 5
+                    </div>
+                </li>
+                
+                <li>
+                    <div
+                        className={`${activeTab === 6 ? 'bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white' : ''} block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
+                        onClick={levelSixHandler}
+                    >
+                        Level 6
+                    </div>
+                </li>
+                
+                <li>
+                    <div
+                        className={`${activeTab === 7 ? 'bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white' : ''} block rounded-full bg-[#f3f2ee] p-2.5 dark:bg-[#1b2e4b]`}
+                        onClick={levelSevenHandler}
+                    >
+                        Level 7
+                    </div>
+                </li>
             </ul>
 
             <div>
@@ -116,21 +155,35 @@ const LevelTree = () => {
                 <div className="mb-5">{activeTab === 2 && <LevelTreeComponent level={3} />}</div>
                 <div className="mb-5">{activeTab === 3 && <LevelTreeComponent level={4} />}</div>
                 <div className="mb-5">{activeTab === 4 && <LevelTreeComponent level={5} />}</div>
+                <div className="mb-5">{activeTab === 5 && <LevelTreeComponent level={6} />}</div>
+
+                <div className="mb-5">{activeTab === 6 && <LevelTreeComponent level={7} />}</div>
+
+                <div className="mb-5">{activeTab === 7 && <LevelTreeComponent level={8} />}</div>
+
             </div>
             <div className="flex justify-between">
                 <button
                     type="button"
                     className={`bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  rounded-lg px-5 py-3 text-white ${activeTab === 1 ? 'hidden' : ''}`}
-                    onClick={() => setActiveTab(activeTab === 4 ? 3 : activeTab === 3 ? 2 : activeTab === 2 ? 1 : 4)}
-                >
+                    onClick={() => setActiveTab(activeTab === 7 ? 6 : activeTab === 6 ? 5 : activeTab === 5 ? 4 : activeTab === 4 ? 3 : activeTab === 3 ? 2 : activeTab === 2 ? 1 : 7)}
+                    >
                     Back
                 </button>
                 <button
                     type="button"
                     className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  rounded-lg px-5 py-3 text-white ltr:ml-auto rtl:mr-auto"
-                    onClick={() => setActiveTab(activeTab === 1 ? 2 : activeTab === 2 ? 3 : activeTab === 3 ? 4 : 1)}
-                >
-                    {activeTab === 4 ? 'Finish' : 'Next'}
+                    onClick={() => setActiveTab(
+                        activeTab === 1 ? 2 :
+                        activeTab === 2 ? 3 :
+                        activeTab === 3 ? 4 :
+                        activeTab === 4 ? 5 :
+                        activeTab === 5 ? 6 :
+                        activeTab === 6 ? 7 :
+                        1
+                      )}
+                                      >
+                    {activeTab === 7 ? 'Finish' : 'Next'}
                 </button>
             </div>
         </div>

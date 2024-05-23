@@ -23,7 +23,8 @@ const History = () => {
     const [page, setPage] = useState(1);
     const [pageSize, setPageSize] = useState(PAGE_SIZES[0]);
     const [initialRecords, setInitialRecords] = useState(rowData || []);
-    const [recordsData, setRecordsData] = useState(initialRecords);
+    const [recordsData, setRecordsData]= useState(initialRecords);
+console.log(recordsData,"recordsData");
 
     const [search, setSearch] = useState('');
 
@@ -47,13 +48,27 @@ const History = () => {
         });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [search, rowData]);
-
+    const formatDate = (date: any) => {
+        if (date) {
+            const dt = new Date(date);
+            const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
+            const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
+            const year = dt.getFullYear();
+            const hours = dt.getHours() < 10 ? '0' + dt.getHours() : dt.getHours();
+            const minutes = dt.getMinutes() < 10 ? '0' + dt.getMinutes() : dt.getMinutes();
+            const seconds = dt.getSeconds() < 10 ? '0' + dt.getSeconds() : dt.getSeconds();
+    
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        }
+        return '';
+    };
+    
     return (
         <div className="space-y-6">
             {/* Skin: Striped  */}
             <div className="panel">
                 <div className="flex items-center justify-between mb-5">
-                    <h5 className="font-semibold text-lg dark:text-white-light">Members</h5>
+                    <h5 className="font-semibold text-lg dark:text-white-light">History</h5>
                     {/* <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} /> */}
                 </div>
                 <div className="datatables">
@@ -62,6 +77,11 @@ const History = () => {
                         className="whitespace-nowrap table-striped"
                         records={recordsData}
                         columns={[
+                            {
+                                accessor: 'createdAt',
+                                title: 'Date and Time',
+                                render: ({ createdAt }) => <div>{formatDate(createdAt)}</div>,
+                            },
                             { accessor: 'category', title: 'Category' },
                             { accessor: 'basedOnWho', title: 'Sponsored Member' },
                             { accessor: 'amount', title: 'Amount' },

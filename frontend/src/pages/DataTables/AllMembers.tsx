@@ -6,6 +6,7 @@ import IconBell from '../../components/Icon/IconBell';
 import { deleteUserForAdmin, getAllUsersToAdmin, verifyUserForAdmin } from '../../store/adminSlice';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 const AllMembers = () => {
     const dispatch = useAppDispatch();
@@ -14,6 +15,7 @@ const AllMembers = () => {
     const { loading, data: rowData, error } = useAppSelector((state: any) => state.getAllUsersToAdminReducer);
     const { loading: verifiedUserLoading, data: verifiedUserData, error: verifiedUserError } = useAppSelector((state: any) => state.verifyUserForAdminReducer);
     const { loading: deletedUserLoading, data: deletedUserData, error: deletedUserError } = useAppSelector((state: any) => state.deleteUserForAdminReducer);
+    const MySwal = withReactContent(Swal);
 
     let transformedData: any;
     if (rowData) {
@@ -67,11 +69,14 @@ const AllMembers = () => {
     const editHandler = (id: any) => {
         navigate(`/users/edit-user-by-admin/${id}`);
     };
+    
 
     const verifyHandler = (userId: any) => {
         const confirming = confirm('Are you sure?');
         if (confirming) {
             dispatch(verifyUserForAdmin(userId));
+            showMessage2()
+
         }
     };
 
@@ -79,6 +84,7 @@ const AllMembers = () => {
         const confirming = confirm('Are you sure?');
         if (confirming) {
             dispatch(deleteUserForAdmin(userId));
+            showMessage3()
         }
     };
 
@@ -91,14 +97,37 @@ const AllMembers = () => {
         }
         return '';
     };
+    const showMessage2 = () => {
+        MySwal.fire({
+            title: `User Approved Successfully`,
+            toast: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
+    const showMessage3 = () => {
+        MySwal.fire({
+            title: `User Deleted Successfully`,
+            toast: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
 
+    
+
+    
     return (
         <div className="space-y-6">
             {/* Skin: Striped  */}
             <div className="panel">
                 <div className="flex items-center justify-between mb-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">Members</h5>
-                    <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                    {/* <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} /> */}
                 </div>
                 <div className="datatables">
                     <DataTable
@@ -107,7 +136,7 @@ const AllMembers = () => {
                         records={recordsData}
                         columns={[
                             { accessor: 'name', title: 'Name' },
-                            { accessor: 'sponser.ownSponserId', title: 'Sponsor' },
+                            { accessor: 'sponser.name', title: 'Sponsor' },
                             { accessor: 'userStatus', title: 'Status' },
                             {
                                 accessor: 'createdAt',
