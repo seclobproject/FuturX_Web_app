@@ -72,6 +72,7 @@ console.log(recordsData,"recordsData");
         return '';
     };
     
+    
     return (
         <div className="space-y-6">
             {/* Skin: Striped  */}
@@ -89,7 +90,7 @@ console.log(recordsData,"recordsData");
                             {
                                 accessor: 'createdAt',
                                 title: 'Date and Time',
-                                render: ({ createdAt }) => <div>{formatDate(createdAt)}</div>,
+                                render: ({ createdAt }:any) => <div>{formatDate(createdAt)}</div>,
                             },
                             { accessor: 'category', title: 'Category' },
                             { accessor: 'basedOnWho', title: 'Sponsored Member' },
