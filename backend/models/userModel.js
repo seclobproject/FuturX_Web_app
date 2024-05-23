@@ -3,8 +3,8 @@ import bcrypt from "bcryptjs";
 
 const transactionSchema = new mongoose.Schema(
   {
-    amount: { type: Number, double: true },
-    lastAmount: { type: Number, double: true },
+    name:String,
+    amount:Number,
     category: String,
     basedOnWho: String,
     joinedLevel: String,
@@ -14,6 +14,7 @@ const transactionSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
 const withdrawalSchema = new mongoose.Schema(
   {
     amount: { type: Number, double: true },
@@ -52,13 +53,11 @@ const userSchema = new mongoose.Schema(
     },
     earning: {
       type: Number,
-      default: 0,
-      double: true,
+      default: 0
     },
     joiningAmount: {
       type: Number,
-      default: 0,
-      double: true,
+      default: 0
     },
     rejoiningWallet: {
       type: Number,
@@ -67,6 +66,7 @@ const userSchema = new mongoose.Schema(
     },
     currentPlan: {
       type: String,
+      default: "beginner",
     },
     userStatus: {
       type: Boolean,
@@ -91,24 +91,43 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    leader: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     autoPool: {
       type: Boolean,
       default: false,
+    },
+    leaderIncomeHistory:[transactionSchema],
+    leaderIncome:{
+      type: Number,
+      default: 0,
     },
     autoPoolPlan: {
       type: String,
     },
     autoPoolAmount: {
       type: Number,
-      double: true,
+      default: 0,
+    },
+    levelIncome: {
+      type: Number,
       default: 0,
     },
     autoPoolBank: {
       type: Number,
-      double: true,
       default: 0,
     },
     isAdmin: {
+      type: Boolean,
+      default: false,
+    },
+    isLeader: {
+      type: Boolean,
+      default: false,
+    },
+    isPromoter: {
       type: Boolean,
       default: false,
     },
@@ -138,11 +157,11 @@ const userSchema = new mongoose.Schema(
     },
     totalWallet: {
       type: Number,
-      double: true,
       default: 0,
     },
     lastWallet: {
       type: String,
+      default: "earning",
     },
     showWithdraw: {
       type: Boolean,
