@@ -86,7 +86,7 @@ const Finance = () => {
     // const [url, setUrl] = useState(`https://dreamzmeta.com/signup/${userInfo._id}`);
     let url = '';
     if (userInfo) {
-        url = `https://futurx.vip/signup/${userInfo._id}`;
+        url = `https://login.futurx.vip/signup/${userInfo._id}`;
     }
 
     useEffect(() => {

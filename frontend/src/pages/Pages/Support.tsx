@@ -36,7 +36,7 @@ const Support = () => {
                 <div className="text-lg font-medium text-white-dark">
                     Our specialists are always happy to help. Email us 24/7 and we'll get back to you.
                 </div>
-                <div className='text-lg font-medium text-sky-400/100 mt-6'><a href='mailto:dreamzmeta@gmail.com'>dreamzmeta@gmail.com</a></div>
+                <div className='text-lg font-medium text-sky-400/100 mt-6'><a href='mailto:futurx@gmail.com'>futurx@gmail.com</a></div>
             </div>
         </div>
     );

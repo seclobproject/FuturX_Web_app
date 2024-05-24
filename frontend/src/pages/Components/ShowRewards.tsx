@@ -65,7 +65,7 @@ const ShowRewards = () => {
                                         </button>
                                     );
                                 })} */}
-                                {rewardData?.imageName && <img src={`https://dreamzmeta.com/uploads/${rewardData?.imageName}`} alt="reward-img" />}
+                                {rewardData?.imageName && <img src={`https://login.futurx.vip/uploads/${rewardData?.imageName}`} alt="reward-img" />}
                             </>
 
                             {/* {isOpen && (

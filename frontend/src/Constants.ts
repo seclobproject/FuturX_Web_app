@@ -1,6 +1,6 @@
 // export const URL = 'http://localhost:6002';
-export const URL = 'http://192.168.29.127:6002';
-// export const URL = 'https://dreamzmeta.com';
+// export const URL = 'http://192.168.29.127:6002';
+export const URL = 'https://login.futurx.vip';
 
 // export const testUsdtAddr = '0x61c03d276aa39a9485c00acab93724cd3df589bd';
 export const UsdtAddr = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // OG
