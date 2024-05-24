@@ -21,7 +21,7 @@ app.use(express.json());
 // Uploads
 const __dirname = path.resolve();
 // app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
-app.use("/uploads", express.static("/var/www/seclob/dreamzmeta/uploads"));
+app.use("/uploads", express.static("/var/www/seclob/futurx/login/uploads"));
 // Uploads
 
 const appDir = path.resolve(process.cwd());
@@ -31,11 +31,11 @@ app.use("/api/admin", adminRoutes);
 
 if (NODE_ENV == "production") {
   // app.use(express.static(__dirname + "/frontend/dist"));
-  app.use(express.static("/var/www/seclob/dreamzmeta/frontend/dist"));
+  app.use(express.static("/var/www/seclob/futurx/login/frontend/dist"));
 
   app.get("*", (req, res) => {
     // res.sendFile(__dirname + "/frontend/dist/index.html");
-    res.sendFile("/var/www/seclob/dreamzmeta/frontend/dist/index.html");
+    res.sendFile("/var/www/seclob/futurx/login/frontend/dist/index.html");
   });
 } else {
   app.get("/", (req, res) => {
