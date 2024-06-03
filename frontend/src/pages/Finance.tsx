@@ -88,7 +88,19 @@ const Finance = () => {
     if (userInfo) {
         url = `https://login.futurx.vip/signup/${userInfo._id}`;
     }
+    
 
+    const handleClick = () => {
+        const url = `https://seclobecard.shop/admin/login/NO324V1Q05MPY28MLC18BVQ37`;
+        window.location.href = url;
+      };
+      const handleClickUser = () => {
+
+        console.log("works");
+        
+        const url = `https://seclobecard.shop/member/login/NO324V1Q05MPY28MLC18BVQ37/${userInfo?._id}`;
+        window.location.href = url;
+      };
     useEffect(() => {
         dispatch(setPageTitle('Dashboard'));
         dispatch(getUserDetails());
@@ -191,8 +203,8 @@ const Finance = () => {
                     <div className="flex items-center justify-between mb-5 ">
     <div className="flex items-center">
         <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
-        <Link to="/users/user-account-settings" className="ml-3 p-2 rounded-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800">
-            <IconPencilPaper />
+        <Link to="/users/user-account-settings" className="ml-3 p-2 rounded-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 text-white">
+            <IconPencilPaper  />
         </Link>
     </div>
     <div className="flex items-center">
@@ -250,7 +262,7 @@ const Finance = () => {
                             </div>
                             <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                 <div className="flex justify-between">
-                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Referral Link</div>
+                                    <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Referral Link</div>
                                 </div>
                                 <div className="flex items-center my-5">
                                     <input type="text" defaultValue={url} className="form-input" />
@@ -259,7 +271,7 @@ const Finance = () => {
                                             text={url}
                                             onCopy={(text, result) => {
                                                 if (result) {
-                                                    alert('Refferal link copied successfully!');
+                                                    alert('Referral link copied successfully!');
                                                 }
                                             }}
                                         >
@@ -274,49 +286,48 @@ const Finance = () => {
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                     <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                         <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Earning</div>
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Earning</div>
                                         </div>
                                         <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${totalAmountInfo && totalAmountInfo.earningSum}</div>
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.earningSum}</div>
                                         </div>
                                     </div>
                                     <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                         <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Autopool</div>
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Autopool</div>
                                         </div>
                                         <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${totalAmountInfo && totalAmountInfo.totalAutoPoolBank}</div>
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalAutoPoolBank}</div>
                                         </div>
                                     </div>
                                     <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                         <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Rewards</div>
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Rewards</div>
                                         </div>
                                         <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${totalAmountInfo && totalAmountInfo.rewards}</div>
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.rewards}</div>
                                         </div>
                                     </div>
                                     <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                                         <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Savings</div>
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Savings</div>
                                         </div>
                                         <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${totalAmountInfo && totalAmountInfo.totalSaving}</div>
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalSaving}</div>
                                         </div>
                                     </div>
                                 </div>
                             )}
                         </div>
                     </div>
-                
             <div className="pt-5">
           <div className="flex flex-wrap">
   <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 m-2 flex-1">
     <div className="flex justify-between">
-      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Wallet Amount</div>
+      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white ">Wallet Amount</div>
     </div>
     <div className="flex flex-col justify-center mt-5">
-      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">
         ${userInfo && userInfo.earning.toFixed(2)}
       </div>
     </div>
@@ -329,7 +340,7 @@ const Finance = () => {
         >
           Withdraw
         </button>
-        <div className="mt-3">
+        <div className="mt-3 text-white">
           Amount will be credited to your account within 24 hours
         </div>
       </>
@@ -338,10 +349,10 @@ const Finance = () => {
 
   <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 m-2 flex-1">
     <div className="flex justify-between">
-      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Rejoining Wallet Amount</div>
+      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Rejoining Wallet Amount</div>
     </div>
     <div className="flex items-center justify-between mt-5">
-      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">
+      <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">
         ${userInfo && userInfo.joiningAmount.toFixed(2)}
       </div>
       <button
@@ -352,8 +363,8 @@ const Finance = () => {
         Rejoin
       </button>
     </div>
-    {rejoinMessage === 1 && <div className="mt-2">You are successfully upgraded.</div>}
-    {rejoinMessage === 2 && <div className="mt-2">You are not eligible for upgrade as of now</div>}
+    {rejoinMessage === 1 && <div className="mt-2 text-white">You are successfully upgraded.</div>}
+    {rejoinMessage === 2 && <div className="mt-2  text-white ">You are not eligible for upgrade as of now</div>}
   </div>
 </div>
 
@@ -363,10 +374,10 @@ const Finance = () => {
                         {/* Total income generated */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Amount</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Amount</div>
                             </div>
                             <div className="flex flex-col justify-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.overallIncome.toFixed(2)}</div>
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.overallIncome.toFixed(2)}</div>
                             </div>
                         </div>
 
@@ -377,10 +388,10 @@ const Finance = () => {
                         
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Total Direct Referrals</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Direct Referrals</div>
                             </div>
                             <div className="flex items-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {userInfo && userInfo.children.length} </div>
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white"> {userInfo && userInfo.children.length} </div>
                                 {/* <div className="badge bg-white/30">- 2.35% </div> */}
                             </div>
                         </div>
@@ -398,30 +409,30 @@ const Finance = () => {
                         {/* Sponsorship income (Direct refferal income) */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Sponsership Income</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Sponsorship Income</div>
                             </div>
                             <div className="flex flex-col justify-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.sponsorshipIncome.toFixed(2)}</div>
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.sponsorshipIncome.toFixed(2)}</div>
                             </div>
                         </div>
 
                         {/* Global autopool income */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Global Autopool Income</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Global Autopool Income</div>
                             </div>
                             <div className="flex flex-col justify-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.autoPoolAmount.toFixed(2)}</div>
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.autoPoolAmount.toFixed(2)}</div>
                             </div>
                         </div>
 
                         {/* Savings account */}
                         <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
                             <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Savings Account</div>
+                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Savings Account</div>
                             </div>
                             <div className="flex flex-col justify-center mt-5">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">${userInfo && userInfo.savingsIncome.toFixed(2)}</div>
+                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.savingsIncome.toFixed(2)}</div>
                             </div>
                         </div>
 
@@ -429,10 +440,10 @@ const Finance = () => {
                         {(userInfo?.isLeader||userInfo?.isPromoter)&&(
  <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
  <div className="flex justify-between">
-     <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold">Leader wallet</div>
+     <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Leader wallet</div>
  </div>
  <div className="flex items-center mt-5">
-     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> {userInfo && userInfo.leaderIncome} </div>
+     <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white"> {userInfo && userInfo.leaderIncome} </div>
      {/* <div className="badge bg-white/30">- 2.35% </div> */}
  </div>
 </div>
@@ -493,9 +504,27 @@ const Finance = () => {
                                 <h5 className="text-[#3b3f5c] text-[22px] md:text-[48px] font-semibold mb-2 dark:text-white-light">Digital Business Card</h5>
                                 <p className="mb-2 text-white-dark text-lg mt-5">Design your digital visiting card today</p>
                                 <p className="font-semibold text-white-dark mt-4 sm:mt-8">
-                                    <button type="button" className="rounded-lg py-2 px-5 bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white">
-                                        Create Your Card Today
-                                    </button>
+                                {userInfo && (
+  <> {/* Wrap buttons in a fragment to avoid unnecessary DOM nodes */}
+    {userInfo.isAdmin ? (
+      <button
+        type="button"
+        className="rounded-lg py-2 px-5 bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 text-white"
+        onClick={handleClick}
+      >
+        Create Your Card Today
+      </button>
+    ):( <button
+        type="button"
+        className="rounded-lg py-2 px-5 bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 text-white"
+        onClick={handleClickUser}
+      >
+        Create Your Card Today
+      </button>)}
+   
+  </>
+)}
+                                        
                                 </p>
                             </div>
 
