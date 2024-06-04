@@ -1,9 +1,11 @@
-// export const URL = 'http://localhost:6002';
-// export const URL = 'http://192.168.29.127:6002';
+// export const URL = 'http://localhost:6008';
+// export const URL = 'http://192.168.29.127:6008';
 export const URL = 'https://login.futurx.vip';
 
-// export const testUsdtAddr = '0x61c03d276aa39a9485c00acab93724cd3df589bd';
-export const UsdtAddr = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // OG
+// export const UsdtAddr = '0x61c03d276aa39a9485c00acab93724cd3df589bd';
+// export const UsdtAddr = '0xdAC17F958D2ee523a2206206994597C13D831ec7'; // OG
+export const UsdtAddr = '0xFD539e080e7024b07166595c3D5022EbAF46927E'; // OG
+
 
 export const contractABI = [
     {

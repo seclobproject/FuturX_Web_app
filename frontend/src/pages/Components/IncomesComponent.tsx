@@ -54,11 +54,17 @@ const IncomesComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
                         className="whitespace-nowrap table-striped"
                         records={recordsData2}
                         columns={[
-                            { accessor: 'name', title: 'Name' },
-                            { accessor: 'email', title: 'Email' },
-                            { accessor: 'ownSponserId', title: 'Sponsor ID' },
-                            { accessor: 'userStatus', title: 'Status', render: (value) => (value ? 'Active' : 'Inactive') },
-                            { accessor: 'currentPlan', title: 'Current Rank' },
+                           
+    { accessor: 'name', title: 'Name' },
+    { accessor: 'email', title: 'Email' },
+    { accessor: 'ownSponserId', title: 'Sponsor ID' },
+    { accessor: 'transactionID', title: 'Transaction ID' },
+    { accessor: 'verifyStatus', title: 'Status', render: (value) => {
+        if (value === 'pending') return 'Pending';
+        if (value === 'inactive') return 'Inactive';
+        if (value === 'active') return 'Active';
+    }},
+    { accessor: 'currentPlan', title: 'Current Rank' }
                         ]}
                         totalRecords={initialRecords2 ? initialRecords2.length : 0}
                         recordsPerPage={pageSize2}

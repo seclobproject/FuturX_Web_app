@@ -67,14 +67,21 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    transactionID: {
+      type: String,
+    },
     currentPlan: {
       type: String,
       default: "beginner",
     },
     userStatus: {
       type: Boolean,
-      default: false,
+      default:false
     },
+    verifyStatus: {
+      type: String,
+    },
+    
     transactions: [transactionSchema],
     children: [
       {

@@ -54,6 +54,7 @@ const hashedPassword = bcrypt.hashSync(password, 10);
       sponser,
       leader,
       isLeader,
+      verifyStatus:"pending",
       name,
       email,
       password:hashedPassword,
@@ -74,6 +75,32 @@ const hashedPassword = bcrypt.hashSync(password, 10);
         ownSponserId: user.ownSponserId,
         currentPlan: user.currentPlan,
         msg:"user added successfull"
+      });
+    } else {
+      res.status(400);
+      throw new Error("Registration failed. Please try again!");
+    }
+  })
+);
+
+router.post(
+  "/apply-for-verify",
+  protect,
+  asyncHandler(async (req, res) => {
+    
+    const { transactionID } = req.body;
+    
+    const userData=await User.findById(req.user._id);
+    if (!userData) {
+      res.status(400);
+      throw new Error("User Not found!");
+    }
+    userData.verifyStatus="inactive";
+    userData.transactionID = transactionID;
+    await userData.save();
+    if (userData) {
+      res.status(200).json({
+        msg:"user transaction id added successfull"
       });
     } else {
       res.status(400);

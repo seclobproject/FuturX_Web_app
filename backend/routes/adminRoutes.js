@@ -331,6 +331,7 @@ router.post(
 
       // Approve the user
       user.userStatus = true;
+      user.verifyStatus="active";
       admin.autoPoolBank += 5;
       admin.rewards += 2.5;
       await admin.save();

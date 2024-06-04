@@ -137,7 +137,8 @@ const AllMembers = () => {
                         columns={[
                             { accessor: 'name', title: 'Name' },
                             { accessor: 'sponser.name', title: 'Sponsor' },
-                            { accessor: 'userStatus', title: 'Status' },
+                            { accessor: 'verifyStatus', title: 'Status' },
+                            { accessor: 'transactionID', title: 'Transaction ID' },
                             {
                                 accessor: 'createdAt',
                                 title: 'Joining Date',
@@ -151,24 +152,33 @@ const AllMembers = () => {
                                         <button type="button" onClick={() => editHandler(user._id)} className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white p-2 rounded-lg">
                                             Edit
                                         </button>
-                                        {user.userStatus === 'Inactive' && (
-                                            <>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => verifyHandler(user._id)}
-                                                    className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white p-2 rounded-lg"
-                                                >
-                                                    Verify
-                                                </button>
-                                                <button
-                                                    type="button"
-                                                    onClick={() => deleteHandler(user._id)}
-                                                    className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white p-2 rounded-lg"
-                                                >
-                                                    Delete
-                                                </button>
-                                            </>
-                                        )}
+                                        {user.verifyStatus === 'pending' && (
+                    <button
+                        type="button"
+                        onClick={() => deleteHandler(user._id)}
+                        className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white p-2 rounded-lg"
+                    >
+                        Delete
+                    </button>
+                )}
+                {user.verifyStatus === 'inactive' && (
+                    <>
+                        <button
+                            type="button"
+                            onClick={() => verifyHandler(user._id)}
+                            className="bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800  text-white p-2 rounded-lg"
+                        >
+                            Verify
+                        </button>
+                        <button
+                            type="button"
+                            onClick={() => deleteHandler(user._id)}
+                            className="bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white p-2 rounded-lg"
+                        >
+                            Delete
+                        </button>
+                    </>
+                )}
                                     </div>
                                 ),
                             },
