@@ -86,15 +86,14 @@ const Finance = () => {
     }
 
     const handleClick = () => {
-        const url = `https://seclobecard.shop/admin/login/NO324V1Q05MPY28MLC18BVQ37`;
+        const url = `https://ecard.futurx.vip/admin/login/J2Y24B1A05VWS31PY709Q0E33`;
         window.location.href = url;
-    };
-    const handleClickUser = () => {
-        console.log('works');
+      };
+      const handleClickUser = () => {
 
-        const url = `https://seclobecard.shop/member/login/NO324V1Q05MPY28MLC18BVQ37/${userInfo?._id}`;
+        const url = `https://ecard.futurx.vip/member/login/J2Y24B1A05VWS31PY709Q0E33/${userInfo?._id}`;
         window.location.href = url;
-    };
+      };
     const showMessage2 = () => {
         MySwal.fire({
             title: `User Transaction Id Added Successfull`,
