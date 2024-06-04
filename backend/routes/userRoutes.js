@@ -10,6 +10,7 @@ import { addCommissionToLine } from "./supportingFunctions/TreeFunctions.js";
 import JoiningRequest from "../models/joinRequestModel.js";
 import WithdrawRequest from "../models/withdrawalRequestModel.js";
 import { payUser } from "./supportingFunctions/payFunction.js";
+import { sendMail } from "../config/mailer.js";
 
 // import upload from "../middleware/fileUploadMiddleware.js";
 
@@ -17,7 +18,7 @@ import { payUser } from "./supportingFunctions/payFunction.js";
 // POST: By admin/sponser
 const generateRandomString = () => {
   const baseString = "FX";
-  const randomDigits = Math.floor(Math.random() * 999999);
+  const randomDigits = Math.floor(Math.random() * 9999999);
   return baseString + randomDigits.toString();
 };
 
@@ -61,6 +62,10 @@ const hashedPassword = bcrypt.hashSync(password, 10);
     });
 
     if (user) {
+      
+    // Send confirmation email
+    await sendMail(user.email, user.name, user.ownSponserId, password);
+
       res.status(200).json({
         id: user._id,
         sponser: user.sponser,
@@ -229,17 +234,20 @@ router.get(
       if (sponser) {
         sponser.overallIncome += 12.5;
 
-        const splitCommission = payUser(12.5, sponser, sponser.lastWallet);
+        const splitCommission =await payUser(12.5, sponser, sponser.lastWallet);
 
         sponser.earning = splitCommission.earning;
         sponser.joiningAmount = splitCommission.joining;
-
+        sponser.rebirthAmount = splitCommission.rebirthAmount;
         sponser.totalWallet += splitCommission.addToTotalWallet;
         sponser.lastWallet = splitCommission.currentWallet;
 
         sponser.sponsorshipIncome += splitCommission.variousIncome;
 
         const updatedSponsor = await sponser.save();
+            if(updatedSponsor){
+              await awardCriteria(updatedSponsor)
+             }
 
         if (user.nodeId) {
           

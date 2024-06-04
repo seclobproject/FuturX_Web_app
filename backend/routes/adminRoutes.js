@@ -14,7 +14,7 @@ import multer from "multer";
 import Reward from "../models/rewardModel.js";
 import JoiningRequest from "../models/joinRequestModel.js";
 import WithdrawRequest from "../models/withdrawalRequestModel.js";
-import { payUser } from "./supportingFunctions/payFunction.js";
+import { awardCriteria, payUser } from "./supportingFunctions/payFunction.js";
 import { log } from "console";
 
 // router.get(
@@ -284,43 +284,50 @@ router.post(
   protect,
   asyncHandler(async (req, res) => {
     const { userId } = req.body;
-    console.log("enter in verify user");
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
     const promoters = await User.find({ isPromoter: true });
 
-const updatePromoter = async (promoter) => {
-  console.log(promoter.name);
-  promoter.leaderIncome += 2.5;
-  promoter.leaderIncomeHistory.push({
-    amount: 2.5,
-    category: "promoters income",
-    basedOnWho: user.name,
-    status: "Approved",
-  });
-
-  try {
-    await promoter.save();
-    console.log("Promoter data saved successfully.");
-  } catch (error) {
-    console.error("Error saving Promoter data:", error);
-  }
-};
-
-if (promoters.length >= 1) await updatePromoter(promoters[0]);
-if (promoters.length >= 2) await updatePromoter(promoters[1]);
-if (promoters.length >= 3) await updatePromoter(promoters[2]);
-
+    
     if (!user) {
       res.status(400);
-        throw new Error("User Already exist !");
+      throw new Error("User Already exist !");
     }
-      if (user.userStatus === true) {
-        res.status(400);
-        throw new Error("User already verified!");
-      }
-      
+    if (user.userStatus === true) {
+      res.status(400);
+      throw new Error("User already verified!");
+    }
+    
     let sponser=await User.findById(user.sponser);
+
+    // Pushing the user to the sponsor's children array
+    if (!sponser.children.includes(user._id)) {
+      sponser.children.push(user._id);
+    }else{
+      res.status(400);
+  throw new Error("This Child already exist in this User !");
+    }
+    const updatePromoter = async (promoter) => {
+      console.log(promoter.name);
+      promoter.leaderIncome += 2.5;
+      promoter.leaderIncomeHistory.push({
+        amount: 2.5,
+        category: "promoters income",
+        basedOnWho: user.name,
+        status: "Approved",
+      });
+    
+      try {
+        await promoter.save();
+        console.log("Promoter data saved successfully.");
+      } catch (error) {
+        console.error("Error saving Promoter data:", error);
+      }
+    };
+    
+    if (promoters.length >= 1) await updatePromoter(promoters[0]);
+    if (promoters.length >= 2) await updatePromoter(promoters[1]);
+    if (promoters.length >= 3) await updatePromoter(promoters[2]);
 
       // Approve the user
       user.userStatus = true;
@@ -334,15 +341,8 @@ if (promoters.length >= 3) await updatePromoter(promoters[2]);
 
       
       if (sponser.userStatus === true) {
-          // Pushing the user to the sponsor's children array
-          if (!sponser.children.includes(user._id)) {
-            sponser.children.push(user._id);
-          }else{
-            res.status(400);
-        throw new Error("This Child already exist in this User !");
-          }
+        console.log("entered in function");
           if(user.leader){
-            console.log(user.leader);
           const  leaderData=await User.findById(user.leader)
             console.log(leaderData);
             leaderData.leaderIncome += 2.5;
@@ -400,10 +400,13 @@ if (promoters.length >= 3) await updatePromoter(promoters[2]);
           });
 
           // splitCommission = payUser(4, sponser, sponser.thirtyChecker);
-          splitCommission = payUser(12.5, sponser, sponser.lastWallet);
+          splitCommission =await payUser(12.5, sponser, sponser.lastWallet);
+          console.log(splitCommission);
 
+          console.log("leving pay user");
           sponser.earning = splitCommission.earning;
           sponser.joiningAmount = splitCommission.joining;
+          sponser.rebirthAmount = splitCommission.rebirthAmount;
           // sponser.thirtyChecker = splitCommission.checker;
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.lastWallet = splitCommission.currentWallet;
@@ -475,21 +478,32 @@ if (promoters.length >= 3) await updatePromoter(promoters[2]);
           });
 
           // splitCommission = payUser(4, sponser, sponser.thirtyChecker);
-          splitCommission = payUser(12.5, sponser, sponser.lastWallet);
+          splitCommission =await payUser(12.5, sponser, sponser.lastWallet);
 
           sponser.earning = splitCommission.earning;
           sponser.joiningAmount = splitCommission.joining;
+          sponser.rebirthAmount = splitCommission.rebirthAmount;
           // sponser.thirtyChecker = splitCommission.checker;
+          console.log(sponser.totalWallet);
+          console.log(sponser.sponsorshipIncome);
+          console.log(splitCommission.variousIncome);
+
           sponser.totalWallet += splitCommission.addToTotalWallet;
+          sponser.sponsorshipIncome += splitCommission.variousIncome;
           sponser.lastWallet = splitCommission.currentWallet;
 
-          sponser.sponsorshipIncome += splitCommission.variousIncome;
         }
       
 
-      const updateSponsor = await sponser.save();
-      // Assigning admin and giving direct referral amount finished
+  
+       const updateSponsor = await sponser.save();
 
+    if(updateSponsor){
+     await awardCriteria(updateSponsor)
+    }
+
+
+      // Assigning admin and giving direct referral amount finished
       // If the sponsor attained 3 children, he should have auto-pool activated
       if (sponser.children.length >= 3 && sponser.autoPool == false) {
         sponser.autoPool = true;
@@ -746,7 +760,7 @@ router.get(
       if (autoPoolBalance > 0) {
         // Distribute 10% of autopool among bronze users
         const promoterUsers = users.filter((user) => {
-          return user.currentPlan === "bronze";
+          return user.currentPlan === "bronze" || user.isPromoter === true;
         });
 
         if (promoterUsers.length > 0) {
@@ -759,13 +773,12 @@ router.get(
           for (const user of promoterUsers) {
             user.autoPoolAmount += amountPerUser;
             user.overallIncome += amountPerUser;
-//munne ulla plan prakaram aanu ee code ivide ezhuthiyath ippol athinte upayogam ella athkond njn comment cheyyunnu
             // if (user.children.length >= 3 && user.currentPlan == "promoter") {
             //   user.currentPlan = "bronza";
             // }
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
@@ -773,6 +786,7 @@ router.get(
 
             user.earning = splitCommission.earning;
             user.joiningAmount = splitCommission.joining;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
             user.sponsorshipIncome += splitCommission.variousIncome;
@@ -792,7 +806,10 @@ router.get(
               });
             }
 
-            await user.save();
+          const updatedUser=  await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += fourtyPercent;
@@ -800,7 +817,7 @@ router.get(
 
         // Distribute 20% of autoPoolBalance among silver users
         const royalAchieverUsers = users.filter((user) => {
-          return user.currentPlan == "silver";
+          return user.currentPlan == "silver" || user.isPromoter === true;
         });
 
         if (royalAchieverUsers.length > 0) {
@@ -822,7 +839,7 @@ router.get(
             // }
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
@@ -830,6 +847,7 @@ router.get(
 
             user.earning = splitCommission.earning;
             user.joiningAmount = splitCommission.joining;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
 
@@ -850,7 +868,10 @@ router.get(
               });
             }
 
-            await user.save();
+            const updatedUser= await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += thirtyPercent;
@@ -858,7 +879,7 @@ router.get(
 
         // Distribute 20% of autoPoolBalance amoung gold users
         const crownAchieverUsers = users.filter((user) => {
-          return user.currentPlan == "gold";
+          return user.currentPlan == "gold" || user.isPromoter === true;
         });
 
         if (crownAchieverUsers.length > 0) {
@@ -885,7 +906,7 @@ router.get(
             // }
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
@@ -893,6 +914,7 @@ router.get(
 
             user.earning = splitCommission.earning;
             user.joiningAmount = splitCommission.joining;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
 
@@ -913,7 +935,10 @@ router.get(
               });
             }
 
-            await user.save();
+            const updatedUser=await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += twentyPercent;
@@ -921,7 +946,7 @@ router.get(
 
         // Distribute 20% of autoPoolBalance amount platinum users
         const diamondAchieverUsers = users.filter((user) => {
-          return user.currentPlan == "platinum";
+          return user.currentPlan == "platinum" || user.isPromoter === true;
         });
 
         if (diamondAchieverUsers.length > 0) {
@@ -943,7 +968,7 @@ router.get(
             user.overallIncome += amountPerUser;
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
@@ -951,6 +976,7 @@ router.get(
 
             user.earning = splitCommission.earning;
             user.joiningAmount = splitCommission.joining;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
 
@@ -971,7 +997,10 @@ router.get(
               });
             }
 
-            await user.save();
+            const updatedUser=await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += tenPercent;
@@ -979,7 +1008,7 @@ router.get(
 
         // Distribute 20% of autoPoolBalance amount diamond users
         const diamondUsers = users.filter((user) => {
-          return user.currentPlan == "diamond";
+          return user.currentPlan == "diamond" || user.isPromoter === true;
         });
 
         if (diamondUsers.length > 0) {
@@ -1001,13 +1030,14 @@ router.get(
             user.overallIncome += amountPerUser;
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
             );
 
             user.earning = splitCommission.earning;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
@@ -1029,7 +1059,10 @@ router.get(
               });
             }
 
-            await user.save();
+            const updatedUser=await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += tewentyPercent;
@@ -1037,7 +1070,7 @@ router.get(
 
         // Distribute 20% of autoPoolBalance amount platinum users
         const starAchieverUsers = users.filter((user) => {
-          return user.currentPlan == "star";
+          return user.currentPlan == "star" || user.isPromoter === true;
         });
 
         if (starAchieverUsers.length > 0) {
@@ -1059,13 +1092,14 @@ router.get(
             user.overallIncome += amountPerUser;
 
             // Add amount to each user start
-            const splitCommission = payUser(
+            const splitCommission =await payUser(
               amountPerUser,
               user,
               user.lastWallet
             );
 
             user.earning = splitCommission.earning;
+            user.rebirthAmount = splitCommission.rebirthAmount;
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
@@ -1087,7 +1121,10 @@ router.get(
               });
             }
 
-            await user.save();
+            const updatedUser=await user.save();
+            if(updatedUser){
+              await awardCriteria(updatedUser)
+             }
           }
 
           balanceUsed += tenPercent;

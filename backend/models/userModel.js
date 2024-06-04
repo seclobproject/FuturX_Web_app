@@ -59,10 +59,13 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    rebirthAmount: {
+      type: Number,
+      default: 0
+    },
     rejoiningWallet: {
       type: Number,
       default: 0,
-      double: true,
     },
     currentPlan: {
       type: String,
@@ -104,6 +107,11 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    awardBonusHistory:[transactionSchema],
+    awardBonus:{
+      type: Number,
+      default: 0,
+    },
     autoPoolPlan: {
       type: String,
     },
@@ -136,7 +144,7 @@ const userSchema = new mongoose.Schema(
     },
     rewards: {
       type: Number,
-      double: true,
+      default: 0,
     },
     hash: {
       type: String,
@@ -170,22 +178,22 @@ const userSchema = new mongoose.Schema(
     withdrawalHistory: [withdrawalSchema],
     generationIncome: {
       type: Number,
-      double: true,
+      default: 0,
+    },
+    levelBalance: {
+      type: Number,
       default: 0,
     },
     sponsorshipIncome: {
       type: Number,
-      double: true,
       default: 0,
     },
     overallIncome: {
       type: Number,
-      double: true,
       default: 0,
     },
     savingsIncome: {
       type: Number,
-      double: true,
       default: 0,
     },
     requestCount: [

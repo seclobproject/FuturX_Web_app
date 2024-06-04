@@ -1,5 +1,5 @@
 import User from "../../models/userModel.js";
-import { payUser } from "./payFunction.js";
+import { awardCriteria, payUser } from "./payFunction.js";
 
 export const bfsNew = async (startingUser, newUserId, left, right) => {
   
@@ -49,10 +49,9 @@ export const bfsNew = async (startingUser, newUserId, left, right) => {
     // Get sponsor ID to avoid from adding commission twice
     // NOT NEEDED
     const sponser = await User.findById(newUserId);
-    const sponserId = sponser.sponser;
     // NOT NEEDED
 
-    // Add commission to everyone in line up to 4 levels above
+    // Add commission to everyone in line up to 6 levels above
     await addCommissionToLine(currentNode._id, 6,sponser);
 
     return {
@@ -74,18 +73,43 @@ export const addCommissionToLine = async (
   let currentLevel = 0;
 
   let commissionAmount = [4,4,3,3,2,2,2];
-  while (currentUserId && currentLevel <= levelsAbove) {
+
+  while (currentLevel <= levelsAbove) {
+
     if (!currentUserId) {
+     const arrayBalanceAmount = commissionAmount.reduce((sum, value) => sum + value, 0);
+      console.log("company total commission",commissionAmount);
+      console.log(arrayBalanceAmount);
+      const company=await User.findOne({isPromoter:true})
+      company.levelBalance+=arrayBalanceAmount;
+      company.leaderIncomeHistory.push({
+        amount: arrayBalanceAmount,
+        category: "Level Balance income",
+        status: "Approved",
+      });
+      await company.save()
       break;
     }
-
+    
     const currentUser = await User.findById(currentUserId);
+
+    console.log("parent names",currentUser.name);
+    
+    if (newUser._id===currentUserId) {
+      console.log("-------------------------same id------------------------------");
+       currentUserId = currentUser.nodeId;
+       continue;
+     }
+
+     console.log("company commission",commissionAmount);
 
     // const commissionToAdd = commissionAmount;
     const commissionToAdd = commissionAmount.shift();
     let splitCommission;
+    console.log("by one commission",commissionToAdd);
 
     currentUser.overallIncome += commissionToAdd;
+    
     currentUser.levelIncome += commissionToAdd;
 
     // Add to transactions history
@@ -97,7 +121,7 @@ export const addCommissionToLine = async (
     });
 
     // splitCommission = payUser(commissionToAdd, currentUser, currentUser.thirtyChecker);
-    splitCommission = payUser(
+    splitCommission =await payUser(
       commissionToAdd,
       currentUser,
       currentUser.lastWallet
@@ -105,13 +129,17 @@ export const addCommissionToLine = async (
 
     currentUser.earning = splitCommission.earning;
     currentUser.joiningAmount = splitCommission.joining;
+    currentUser.rebirthAmount = splitCommission.rebirthAmount;
     // currentUser.thirtyChecker = splitCommission.checker;
     currentUser.totalWallet += splitCommission.addToTotalWallet;
     currentUser.lastWallet = splitCommission.currentWallet;
     currentUser.generationIncome += splitCommission.variousIncome;
 
     // Save the updated user to the database
-    await currentUser.save();
+    const updatedUser=await currentUser.save();
+    if(updatedUser){
+     await awardCriteria(updatedUser)
+    }
 
     // Move to the parent of the current user
     currentUserId = currentUser.nodeId;
