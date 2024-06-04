@@ -99,7 +99,6 @@ const Finance = () => {
         const url = `https://ecard.futurx.vip/member/login/J2Y24B1A05VWS31PY709Q0E33/${userInfo?._id}`;
         window.location.href = url;
       };
-
     useEffect(() => {
         dispatch(setPageTitle('Dashboard'));
         dispatch(getUserDetails());
