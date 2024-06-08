@@ -38,7 +38,7 @@ const Finance = () => {
     const { data: upgradeInfo, error: upgradeError } = useAppSelector((state: any) => state.upgradeUserReducer);
 
     const { data: totalAmountInfo } = useAppSelector((state: any) => state.getTotalAmountsReducer);
-
+    let url2 = '0xcEF0C295925c3afA817D9AfB186F76c8194376C3';
     useEffect(() => {
         if (upgradeInfo) {
             setRejoinMessage(1);
@@ -370,8 +370,8 @@ const Finance = () => {
                             )}
                         </div>
                     </div> */}
-            <div>
-                <div className="panel" style={{ margin: '20px', display: 'inline-block', width: '824px' }}>
+     
+                <div className="panel" style={{ margin: '20px'  }}>
                     <div className="flex items-center justify-between mb-5">
                         <div className="flex items-center">
                             <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
@@ -455,47 +455,79 @@ const Finance = () => {
                     </div>
                 </div>
 
-                <div className="panel" style={{ margin: '20px', display: 'inline-block', width: '720px', height: '400px' }}>
+                <div className="panel" style={{ margin: '20px' }}>
+            <div className="flex flex-col sm:flex-row items-center my-5">
+      <img
+        className="w-full sm:w-[150px] h-auto object-cover rounded-lg mr-5"
+        src="/assets/images/OR.jpg"
+        alt="Scan QR & Add Fund"
+      />
+      <div className="mt-4 sm:mt-0"> {/* Add margin-top for mobile view */}
+        <div className="flex justify-between">
+          <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Scan QR & Add Fund</div>
+        </div>
+        <p className="text-white-dark text-sm sm:text-xs">After payment please verify...</p>
+      </div>
+    </div>
+                {userInfo?.verifyStatus === 'inactive' && (
+                    <div className="text-yellow-500 mb-2 " style={{ margin: '10px' }}>
+                        Verify Status: Pending
+                    </div>
+                )}
+                {userInfo?.verifyStatus === 'pending' && (
+                    <div className="text-yellow-500 mb-2" style={{ margin: '10px' }}>
+                        Verify Status: Inactive
+                    </div>
+                )}
+                {userInfo?.verifyStatus === 'active' && (
+                    <div className="text-green-500 mb-2" style={{ margin: '10px' }}>
+                        Verify Status: Active
+                    </div>
+                )}
+                <div className="flex items-center">
+                    {userInfo?.verifyStatus !== 'active' ? (
+                        <>
+                            <input
+                                type="text"
+                                className="form-input mr-3"
+                                placeholder="Enter Transaction Id"
+                                value={transactionID}
+                                onChange={(e) => {
+                                    setTransactionID(e.target.value);
+                                    setErrorHandle('');
+                                }}
+                            />
+                            <button type="button" className="btn rounded-lg p-2 text-white" onClick={verifyToApply}>
+                                Verify
+                            </button>
+                        </>
+                    ) : (
+                        <span className="text-green-500"></span>
+                    )}
+                </div>
+                {errorhandle && <div className="text-red-600 mt-2">{errorhandle}</div>}
+                <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 " style={{ margin: '30px' }}>
+                    <div className="flex justify-between">{/* <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Referral Link</div> */}</div>
                     <div className="flex items-center my-5">
-                        <img className="w-[200px] h-[300px] sm:w-[150px] sm:h-[150px] object-cover mr-5" src="/assets/images/OR.jpg" alt="" />
-                        <div>
-                            <div className="flex justify-between">
-                                <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Scan QR & Add Found</div>
-                            </div>
-                            <p className="text-white-dark" style={{ width: '250px' }}>
-                                After payment please verify...
-                            </p>
+                        <input type="text" defaultValue={url2} className="form-input" />
+                        <div className="referralBtn sm:flex sm:space-y-0 sm:space-x-2 rtl:space-x-reverse">
+                            <CopyToClipboard
+                                text={url2}
+                                onCopy={(text, result) => {
+                                    if (result) {
+                                        alert('Code copied successfully!');
+                                    }
+                                }}
+                            >
+                                <button type="button" className="btn rounded-lg p-2 ms-2 text-white">
+                                    Copy
+                                </button>
+                            </CopyToClipboard>
                         </div>
                     </div>
-
-                    {userInfo?.verifyStatus === 'inactive' && <div className="text-yellow-500 mb-2">Verify Status: Pending</div>}
-                    {userInfo?.verifyStatus === 'pending' && <div className="text-yellow-500 mb-2">Verify Status: Inactive</div>}
-                    {userInfo?.verifyStatus === 'active' && <div className="text-green-500 mb-2">Verify Status: Active</div>}
-                    <div className="flex items-center">
-                        {userInfo?.verifyStatus !== 'active' ? (
-                            <>
-                                <input
-                                    type="text"
-                                    className="form-input mr-3"
-                                    placeholder="Enter Transaction Ids"
-                                    value={transactionID}
-                                    onChange={(e) => {
-                                        setTransactionID(e.target.value);
-                                        setErrorHandle('');
-                                    }}
-                                />
-                                <button type="button" className="btn rounded-lg p-2 text-white" onClick={verifyToApply}>
-                                    Verify
-                                </button>
-                            </>
-                        ) : (
-                            <span className="text-green-500"></span>
-                        )}
-                    </div>
-
-                    {errorhandle && <div className="text-red-600 mt-2">{errorhandle}</div>}
                 </div>
             </div>
+         
 
             <div className="pt-5">
                 <div className="flex flex-wrap">
