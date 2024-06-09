@@ -17,16 +17,17 @@ import router from './router/index';
 // Redux
 import { Provider } from 'react-redux';
 import store from './store/index';
-import { Web3Modal } from './walletConfig/Web3Modal';
+import { modalConfig } from './walletConfig/Web3Modal';
+import { createWeb3Modal } from '@web3modal/ethers/react';
+
+createWeb3Modal(modalConfig);
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <React.StrictMode>
         <Suspense>
-            <Web3Modal>
-                <Provider store={store}>
-                    <RouterProvider router={router} />
-                </Provider>
-            </Web3Modal>
+            <Provider store={store}>
+                <RouterProvider router={router} />
+            </Provider>
         </Suspense>
     </React.StrictMode>
 );

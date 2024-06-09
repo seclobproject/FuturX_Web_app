@@ -6,20 +6,16 @@ import { useEffect, useState } from 'react';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import IconPencilPaper from '../components/Icon/IconPencilPaper';
 import { getUserDetails, upgradeUser } from '../store/userSlice';
-// import { ERC20_ABI } from '../abi';
+import { useContractWrite, useBalance, useContractRead } from 'wagmi';
+import { abi } from '../abi';
 import WalletConnectButton from '../components/Button';
-import { COMPANY_WALLET, URL, USDT_ADDRESS } from '../Constants';
+import { useAccount } from 'wagmi';
+import { CompanyAddress, URL, UsdtAddr } from '../Constants';
 import TimerComponent from '../components/Timer';
 import { getTotalAmounts, verifyUser } from '../store/adminSlice';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
-
-import { useWeb3ModalState } from '@web3modal/ethers/react';
-import { ERC20_ABI } from '../ERC20_ABI';
-
-import { useWeb3ModalAccount, useWeb3ModalProvider } from '@web3modal/ethers/react'
-import { BrowserProvider, Contract, ethers, formatUnits, parseUnits } from 'ethers'
 
 const Finance = () => {
     const MySwal = withReactContent(Swal);
@@ -30,6 +26,10 @@ const Finance = () => {
     const [refresh, setRefresh] = useState('');
     const [errorhandle, setErrorHandle] = useState('');
     const currentDateTime = new Date();
+    // const currentHour = currentDateTime.getHours();
+    // const currentMinute = currentDateTime.getMinutes();
+    // const currentTime = currentDateTime.toLocaleTimeString('en-US', { hour12: false, timeZone: 'Asia/Kolkata' });
+    // const [showButton, setShowButton] = useState(false);
 
     const { data: userInfo } = useAppSelector((state: any) => state.getUserDetailsReducer);
 
@@ -48,37 +48,49 @@ const Finance = () => {
         }
     }, [upgradeInfo, upgradeError]);
 
-    const { address, chainId, isConnected } = useWeb3ModalAccount();
-    const { walletProvider } = useWeb3ModalProvider()
-    const { open, selectedNetworkId } = useWeb3ModalState()
+    const { address } = useAccount();
 
-    const sendUSDT = async () => {
-        try {
-            if (!isConnected) throw Error('Wallet is not connected')
-            if (!walletProvider) throw Error('Signer failed !')
+    // console.log("Wallet Address", address)
 
-            const ethersProvider = new BrowserProvider(walletProvider);
-            const signer = await ethersProvider.getSigner();
-            const owner = await signer.getAddress();
+    const result = useBalance({
+        address,
+        token: UsdtAddr,
+    });
 
-            const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
-            const amount = parseUnits("50", 6);
-
-            const txn = await contract.transfer(COMPANY_WALLET, amount);
-            const reciept = await txn.wait()
-
-            console.log(reciept.hash) // Transaction Hash
-        } catch (e) {
-            // Handle error here
-            console.log(e)
-        }
-    }
-
-    // TODO
-    // The value data have something to do in ui
-    // Which i didn't consider
+    // TODO: The following `data` have many UI function
+    // Correct it
     const data = null;
+    // const { data, isLoading, isSuccess, write, isError } = useContractWrite({
+    //     address: UsdtAddr,
+    //     abi,
+    //     functionName: 'transferFrom',
+    //     args: [address, '0x5421f8d1956ECe9B028486Fe40f1A342BB5fC17E', 1000000],
+    // });
 
+
+    // const resultp = useContractRead({
+    //     abi: abi, // Import the ABI of the token contract
+    //     address: UsdtAddr,
+    //     functionName: 'totalSupply', // Specify the function you want to call
+    // });
+
+    // console.log(resultp.data.toString())
+
+    const { data: approvalData, write: TransferUSDT } = useContractWrite({
+        address: UsdtAddr,
+        abi,
+        functionName: 'transfer',
+        args: [CompanyAddress, BigInt(1000000)],
+        onError: (e: any) => {
+            console.log("Transaction Failed !");
+            console.log(e);
+        },
+        onSuccess: (tx: any) => {
+            console.log("Transaction Success !");
+        },
+    });
+
+    // const [url, setUrl] = useState(`https://dreamzmeta.com/signup/${userInfo._id}`);
     let url = '';
     if (userInfo) {
         url = `https://login.futurx.vip/signup/${userInfo._id}`;
@@ -381,7 +393,7 @@ const Finance = () => {
                     <div className="flex items-center">
                         <WalletConnectButton />
                         {address && userInfo && userInfo.userStatus == false && (
-                            <button type="button" onClick={sendUSDT} className="btn btn-outline-success ml-3">
+                            <button type="button" onClick={async () => await TransferUSDT()} className="btn btn-outline-success ml-3">
                                 Activate account
                             </button>
                         )}
