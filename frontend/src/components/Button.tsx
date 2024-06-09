@@ -1,8 +1,9 @@
 // import { truncate } from '@/utils/helper'
 // import { Button, Text } from '@nextui-org/react'
-import { useWeb3Modal } from '@web3modal/wagmi/react';
+import { useWeb3Modal } from '@web3modal/ethers/react'
 import React, { Fragment } from 'react';
-import { useAccount } from 'wagmi';
+
+import { useWeb3ModalAccount } from '@web3modal/ethers/react'
 
 function truncate(str: string, maxLength: number): string {
     if (str.length > maxLength) {
@@ -13,7 +14,7 @@ function truncate(str: string, maxLength: number): string {
 
 const WalletConnectButton = ({ size }: any) => {
     const { open } = useWeb3Modal();
-    const { address, isConnecting, isDisconnected } = useAccount();
+    const { address } = useWeb3ModalAccount();
 
     return (
         <Fragment>

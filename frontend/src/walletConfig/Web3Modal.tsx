@@ -1,27 +1,47 @@
-import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react';
+import { createWeb3Modal, defaultConfig } from '@web3modal/ethers/react'
 
-import { WagmiConfig } from 'wagmi';
-// import { sepolia } from 'viem/chains';
-import { mainnet } from 'viem/chains'; // OG
-
-// 1. Get projectId
-const projectId = 'b4024fbeee0399ffbcb8201ed2e7c652';
-
-// 2. Create wagmiConfig
-const metadata = {
-    name: 'Web3Modal',
-    description: 'Web3Modal Example',
-    url: 'https://web3modal.com',
-    icons: ['https://avatars.githubusercontent.com/u/37784886'],
-};
-
-// const chains = [sepolia]
-const chains = [mainnet]; // OG
-const wagmiConfig: any = defaultWagmiConfig({ chains, projectId, metadata });
-
-// 3. Create modal
-createWeb3Modal({ wagmiConfig, projectId, chains, defaultChain: mainnet }); // 'defaultChain: mainnet' also has to added. Not checked after adding default chain
-
-export function Web3Modal({ children }: any) {
-    return <WagmiConfig config={wagmiConfig}>{children}</WagmiConfig>;
+const bsc = {
+    chainId: 56,
+    name: 'BNB Smart Chain Mainnet',
+    currency: 'BNB',
+    explorerUrl: 'https://bscscan.com',
+    rpcUrl: 'https://rpc.ankr.com/bsc'
 }
+
+const sepolia = {
+    chainId: 11155111,
+    name: 'Sepolia',
+    currency: 'ETH',
+    explorerUrl: 'https://sepolia.etherscan.io',
+    rpcUrl: 'https://rpc-sepolia.rockx.com'
+}
+
+export const projectId = 'b4024fbeee0399ffbcb8201ed2e7c652'
+
+
+// 3. Create a metadata object
+const metadata = {
+    name: 'My Website',
+    description: 'My Website description',
+    url: 'https://mywebsite.com', // origin must match your domain & subdomain
+    icons: ['https://avatars.mywebsite.com/']
+}
+
+const ethersConfig = defaultConfig({
+    /*Required*/
+    metadata,
+    defaultChainId: 56 // used for the Coinbase SDK
+})
+
+export const modalConfig = {
+    ethersConfig,
+    chains: [
+        bsc, 
+        // sepolia
+    ],
+    projectId,
+    enableAnalytics: false,
+    // termsConditionsUrl: 'https://www.mytermsandconditions.com',
+    // privacyPolicyUrl: 'https://www.myprivacypolicy.com',
+}
+
