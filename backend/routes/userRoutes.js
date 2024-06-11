@@ -520,16 +520,10 @@ router.post(
 
     if (user) {
       if (user.earning >= amount) {
-        // Check withdrawal eligibility by the number of direct refferals
-        if (!user.requestCount || user.requestCount.length == 0) {
-          user.requestCount = [0, 1, 2, 3,4];
-        }
 
-        const updateUser = await user.save();
+        const currentReqState = user.requestCount.shift();
 
-        const currentReqState = updateUser.requestCount.shift();
-
-        if (currentReqState <= updateUser.children.length) {
+        if (currentReqState <= user.children.length) {
           const withdrawalRequest = await WithdrawRequest.create({
             user: userId,
             amount: amount,
@@ -539,8 +533,8 @@ router.post(
           });
 
           if (withdrawalRequest) {
-            updateUser.showWithdraw = false;
-            const updatedUser = await updateUser.save();
+            user.showWithdraw = false;
+            const updatedUser = await user.save();
             if (updatedUser) {
               res.status(201).json({
                 sts: "01",

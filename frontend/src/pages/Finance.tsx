@@ -10,7 +10,7 @@ import { getUserDetails, upgradeUser } from '../store/userSlice';
 import WalletConnectButton from '../components/Button';
 import { COMPANY_WALLET, URL, USDT_ADDRESS } from '../Constants';
 import TimerComponent from '../components/Timer';
-import { getTotalAmounts, verifyUser } from '../store/adminSlice';
+import { getTotalAmounts, verifyUser, verifyUserForAdmin } from '../store/adminSlice';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
@@ -54,25 +54,28 @@ const Finance = () => {
 
     const sendUSDT = async () => {
         try {
-            if (!isConnected) throw Error('Wallet is not connected')
-            if (!walletProvider) throw Error('Signer failed !')
+            if (!isConnected) throw Error('Wallet is not connected');
+            if (!walletProvider) throw Error('Signer failed !');
 
             const ethersProvider = new BrowserProvider(walletProvider);
             const signer = await ethersProvider.getSigner();
             const owner = await signer.getAddress();
 
             const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
-            const amount = parseUnits("50", 6);
+            const amount = parseUnits('50', 6);
 
             const txn = await contract.transfer(COMPANY_WALLET, amount);
-            const reciept = await txn.wait()
+            const reciept = await txn.wait();
 
-            console.log(reciept.hash) // Transaction Hash
+            console.log(reciept.hash, 'status'); // Transaction Hash
+            if (reciept.status === 1) {
+                dispatch(verifyUserForAdmin(userInfo?._id));
+            }
         } catch (e) {
             // Handle error here
-            console.log(e)
+            console.log(e);
         }
-    }
+    };
 
     // TODO
     // The value data have something to do in ui

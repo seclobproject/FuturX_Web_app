@@ -1283,7 +1283,7 @@ router.post(
     if (!requestId) {
       res.status(400).json({ sts: "00", msg: "Please send request id" });
     }
-
+   console.log(requestId);
     const request = await WithdrawRequest.findById(requestId).populate("user");
 
     const admin = await User.findById(req.user._id);
