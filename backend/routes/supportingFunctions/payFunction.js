@@ -1,6 +1,8 @@
+import { sendUSDT } from "../../utils/sendUSDT.js";
+import { proceedToWithdraw } from "../adminRoutes.js";
 import { bfsNew } from "./TreeFunctions.js";
 
-export const payUser =async (amount, sponser, lastWallet) => {
+export const payUser =async (amount, sponser, lastWallet) =>{
   console.log("entered in pay user");
 
   let earning = sponser.earning;
@@ -30,6 +32,13 @@ export const payUser =async (amount, sponser, lastWallet) => {
       if(totalWallet % 250 === 0){
         currentWallet = 'rebirth';
       }
+      if(earning>=10){
+       const reciept= await sendUSDT(sponser.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(sponser._id)
+        earning -= 10;
+       }
+      }
       
     } else if(currentWallet==='joining'){
 
@@ -41,8 +50,6 @@ export const payUser =async (amount, sponser, lastWallet) => {
       if (joining % 50 === 0) {
         currentWallet = 'earning';
       }
-      
-      
     }else{
       const spaceInRebirth = 50 - (rebirthAmount % 50);
       const amountToAdd = Math.min(amount, spaceInRebirth);
@@ -59,9 +66,6 @@ export const payUser =async (amount, sponser, lastWallet) => {
     }
 
   }
-  
-
-
 
   
   return { earning, joining,rebirthAmount, addToTotalWallet, currentWallet, variousIncome };
@@ -79,31 +83,31 @@ export const awardCriteria = async (user) => {
     );
   };
 
-  if (!hasReceivedAward(50) && user.children.length >= 6 && user.earning >= 150) {
+  if (!hasReceivedAward(50) && user.children.length >= 6 && user.totalWallet >= 250) {
     user.awardBonus += 50;
     user.awardBonusHistory.push({
       amount: 50,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(250) && user.children.length >= 12 && user.earning >= 0) {
+  } else if (!hasReceivedAward(250) && user.children.length >= 12 && user.totalWallet >= 700) {
     user.awardBonus += 250;
     user.awardBonusHistory.push({
       amount: 250,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(750) && user.children.length >= 24 && user.earning >= 1500) {
+  } else if (!hasReceivedAward(750) && user.children.length >= 24 && user.totalWallet >= 1500) {
     user.awardBonus += 750;
     user.awardBonusHistory.push({
       amount: 750,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(1200) && user.children.length >= 48 && user.earning >= 3200) {
+  } else if (!hasReceivedAward(1200) && user.children.length >= 48 && user.totalWallet >= 5000) {
     user.awardBonus += 1200;
     user.awardBonusHistory.push({
       amount: 1200,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(3500) && user.children.length >= 96 && user.earning >= 10000) {
+  } else if (!hasReceivedAward(3500) && user.children.length >= 96 && user.totalWallet >= 14000) {
     user.awardBonus += 3500;
     user.awardBonusHistory.push({
       amount: 3500,

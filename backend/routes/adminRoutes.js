@@ -17,273 +17,12 @@ import WithdrawRequest from "../models/withdrawalRequestModel.js";
 import { awardCriteria, payUser } from "./supportingFunctions/payFunction.js";
 import { log } from "console";
 
-// router.get(
-//   "/verify-user-payment",
-//   protect,
-//   asyncHandler(async (req, res) => {
-//     const userId = req.user._id;
 
-//     const user = await User.findById(userId).populate("sponser");
-//     const admin = await User.findOne({
-//       isAdmin: true,
-//       // email: "peringammalasajeebkhan@gmail.com",
-//     });
-
-//     if (user.userStatus === true) {
-//       res.status(400);
-//       throw new Error("User already verified!");
-//     }
-
-//     if (user) {
-//       // Approve the user
-//       user.userStatus = true;
-
-//       // Add $2 to Auto Pool bank of admin
-//       if (admin.autoPoolBank) {
-//         admin.autoPoolBank += 5;
-//       } else {
-//         admin.autoPoolBank = 5;
-//       }
-
-//       if (admin.rewards) {
-//         admin.rewards += 2.5;
-//       } else {
-//         admin.rewards = 2.5;
-//       }
-
-//       await admin.save();
-
-//       // Find the sponsor (If OgSponsor is not activated, he should be replaced by admin)
-//       let sponser;
-
-//       let splitCommission;
-
-//       if (user.sponser) {
-//         const ogSponser = user.sponser;
-
-//         if (ogSponser.userStatus === true) {
-//           // 'sponsor' is assigned as the original sponsor
-//           sponser = user.sponser;
-
-//           // Pushing the user to the sponsor's children array
-//           if (!sponser.children.includes(user._id)) {
-//             sponser.children.push(user._id);
-//           }
-
-//           // Adding $4 to the sponsor's earning
-//           // if (!sponser.thirtyChecker) {
-//           //   sponser.thirtyChecker = false;
-//           // }
-
-//           if (!sponser.joiningAmount) {
-//             sponser.joiningAmount = 0;
-//           }
-
-//           if (!sponser.totalWallet) {
-//             sponser.totalWallet = sponser.earning || 0;
-//           }
-
-//           if (!sponser.lastWallet) {
-//             sponser.lastWallet = "earning";
-//           }
-
-//           if (!sponser.sponsorshipIncome) {
-//             sponser.sponsorshipIncome = 0;
-//           }
-
-//           if (!sponser.overallIncome) {
-//             sponser.overallIncome = 0;
-//           }
-//           sponser.overallIncome += 12.5;
-
-//           if (
-//             sponser.children.length >= 3 &&
-//             sponser.currentPlan == "beginner"
-//           ) {
-//             sponser.currentPlan = "bronze";
-//           } else if (
-//             sponser.children.length >= 6 &&
-//             sponser.currentPlan == "bronze"
-//           ) {
-//             sponser.currentPlan = "silver";
-//           } else if (
-//             sponser.children.length >= 12 &&
-//             sponser.currentPlan == "silver"
-//           ) {
-//             sponser.currentPlan = "gold";
-//           }else if (
-//             sponser.children.length >= 24 &&
-//             sponser.currentPlan == "gold"
-//           ) {
-//             sponser.currentPlan = "platinum";
-//           }else if (
-//             sponser.children.length >= 48 &&
-//             sponser.currentPlan == "platinum"
-//           ) {
-//             sponser.currentPlan = "diamond";
-//           }else if (
-//             sponser.children.length >= 96 &&
-//             sponser.currentPlan == "diamond"
-//           ) {
-//             sponser.currentPlan = "star";
-//           }
-
-//           if (!sponser.transactions) {
-//             sponser.transactions = [];
-//           }
-
-//           sponser.transactions.push({
-//             amount: 4,
-//             category: "sponsorship",
-//             basedOnWho: user.name,
-//           });
-
-//           splitCommission = payUser(12.5, sponser, sponser.lastWallet);
-
-//           sponser.earning = splitCommission.earning;
-//           sponser.joiningAmount = splitCommission.joining;
-//           sponser.totalWallet += splitCommission.addToTotalWallet;
-//           sponser.lastWallet = splitCommission.currentWallet;
-
-//           // NOT necessory
-//           sponser.sponsorshipIncome += splitCommission.variousIncome;
-//           // NOT necessory
-//         } else {
-//           // If original sponsor is not verified, admin is assigned as the sponsor.
-//           sponser = admin;
-//           user.sponser = admin._id;
-//           // Pushing the user to the sponser's children array
-//           if (!sponser.children.includes(user._id)) {
-//             sponser.children.push(user._id);
-//           }
-
-//           // Adding $4 to the sponsor's earning
-//           // if (!sponser.thirtyChecker) {
-//           //   sponser.thirtyChecker = false;
-//           // }
-
-//           if (!sponser.totalWallet) {
-//             sponser.totalWallet = sponser.earning || 0;
-//           }
-
-//           if (!sponser.lastWallet) {
-//             sponser.lastWallet = "earning";
-//           }
-
-//           if (!sponser.sponsorshipIncome) {
-//             sponser.sponsorshipIncome = 0;
-//           }
-
-//           if (!sponser.overallIncome) {
-//             sponser.overallIncome = 0;
-//           }
-//           sponser.overallIncome += 12.5;
-
-//           if (
-//             sponser.children.length >= 3 &&
-//             sponser.currentPlan == "beginner"
-//           ) {
-//             sponser.currentPlan = "bronze";
-//           } else if (
-//             sponser.children.length >= 6 &&
-//             sponser.currentPlan == "bronze"
-//           ) {
-//             sponser.currentPlan = "silver";
-//           } else if (
-//             sponser.children.length >= 12 &&
-//             sponser.currentPlan == "silver"
-//           ) {
-//             sponser.currentPlan = "gold";
-//           }else if (
-//             sponser.children.length >= 24 &&
-//             sponser.currentPlan == "gold"
-//           ) {
-//             sponser.currentPlan = "platinum";
-//           }else if (
-//             sponser.children.length >= 48 &&
-//             sponser.currentPlan == "platinum"
-//           ) {
-//             sponser.currentPlan = "diamond";
-//           }else if (
-//             sponser.children.length >= 96 &&
-//             sponser.currentPlan == "diamond"
-//           ) {
-//             sponser.currentPlan = "star";
-//           }
-
-//           if (!sponser.transactions) {
-//             sponser.transactions = [];
-//           }
-
-//           sponser.transactions.push({
-//             amount: 4,
-//             category: "sponsorship",
-//             basedOnWho: user.name,
-//           });
-
-//           // splitCommission = payUser(4, sponser, sponser.thirtyChecker);
-//           splitCommission = payUser(12.5, sponser, sponser.lastWallet);
-
-//           sponser.earning = splitCommission.earning;
-//           sponser.joiningAmount = splitCommission.joining;
-//           // sponser.thirtyChecker = splitCommission.checker;
-//           sponser.totalWallet += splitCommission.addToTotalWallet;
-//           sponser.lastWallet = splitCommission.currentWallet;
-
-//           sponser.sponsorshipIncome += splitCommission.variousIncome;
-//         }
-//       }
-
-//       const updateSponsor = await sponser.save();
-//       // Assigning admin and giving direct referral amount finished
-
-//       // If the sponsor attained 4 children, he should have auto-pool activated
-//       if (sponser.children.length >= 4 && sponser.autoPool == false) {
-//         sponser.autoPool = true;
-//         // NOT NEEDED
-//         sponser.autoPoolPlan = "starPossession";
-//         // NOT NEEDED
-//       }
-//       // Auto pool finished
-
-//       // Now assign the user to the tree
-//       let updateTree;
-//       if (updateSponsor) {
-//         const left = "left";
-//         const right = "right";
-//         updateTree = await bfsNew(sponser, userId, left, right);
-//       }
-//       // Assign user to tree finished
-
-//       if (updateTree) {
-//         const attachedNode = updateTree.currentNodeId;
-//         user.nodeId = attachedNode;
-
-//         const updateSponsor = await sponser.save();
-//         const updatedUser = await user.save();
-
-//         if (updateSponsor && updatedUser) {
-//           res.status(200).json({ sts: "01", message: "Success" });
-//         } else {
-//           res
-//             .status(400)
-//             .json({ sts: "00", msg: "Error occured while updating!" });
-//         }
-//       } else {
-//         res.status(400).json({ msg: "Error assigning user to the tree" });
-//       }
-//     } else {
-//       res.status(401).json({ msg: "User not found" });
-//     }
-//   })
-// );
-
-// Verify user payment by admin (for testing)
 router.post(
   "/verify-user-payment-by-admin",
   protect,
   asyncHandler(async (req, res) => {
-    const { userId } = req.body;
+    const { userId,address } = req.body;
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
     const promoters = await User.find({ isPromoter: true });
@@ -571,6 +310,27 @@ router.post(
     }
   })
 );
+
+//get user wallet address
+
+router.post(
+  "/store-wallet-address",
+  protect,
+  asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    console.log(userId);
+    const {address}=req.body;
+    console.log(address);
+    const user = await User.findById(userId)
+    user.walletAddress=address;
+    updatedUser=await user.save()
+
+    if (updatedUser) {
+      res.json(updatedUser.walletAddress);
+    }
+  })
+);
+
 
 // GET all users to admin
 router.get(
@@ -1235,113 +995,144 @@ router.get(
 );
 
 // Post: Accept/Reject withdrawal request
-router.post(
-  "/manage-withdrawal-request",
-  protect,
-  asyncHandler(async (req, res) => {
-    const { requestId, action, hash } = req.body;
+// router.post(
+//   "/manage-withdrawal-request",
+//   protect,
+//   asyncHandler(async (req, res) => {
+//     const { requestId, action, hash } = req.body;
 
-    if (!requestId || !action) {
-      res
-        .status(400)
-        .json({ sts: "00", msg: "Please send request id and action" });
-    }
+//     if (!requestId || !action) {
+//       res
+//         .status(400)
+//         .json({ sts: "00", msg: "Please send request id and action" });
+//     }
 
-    const request = await WithdrawRequest.findById(requestId);
-    const user = await User.findById(request.user);
+//     const request = await WithdrawRequest.findById(requestId);
+//     const user = await User.findById(request.user);
 
-    if (request) {
-      request.status = action;
-      request.hash = hash;
+//     if (request) {
+//       request.status = action;
+//       request.hash = hash;
 
-      user.earning -= request.amount;
+//       user.earning -= request.amount;
 
-      const updatedRequest = await request.save();
-      const updatedUser = await user.save();
+//       const updatedRequest = await request.save();
+//       const updatedUser = await user.save();
 
-      if (updatedRequest && updatedUser) {
-        res.status(200).json({
-          sts: "01",
-          msg: "Request updated successfully",
-        });
-      } else {
-        res.status(400).json({ sts: "00", msg: "Request not updated" });
-      }
-    } else {
-      res.status(400).json({ sts: "00", msg: "No request found" });
-    }
-  })
-);
+//       if (updatedRequest && updatedUser) {
+//         res.status(200).json({
+//           sts: "01",
+//           msg: "Request updated successfully",
+//         });
+//       } else {
+//         res.status(400).json({ sts: "00", msg: "Request not updated" });
+//       }
+//     } else {
+//       res.status(400).json({ sts: "00", msg: "No request found" });
+//     }
+//   })
+// );
 
 // Manage payment send
-router.post(
-  "/manage-payment-send",
-  protect,
-  asyncHandler(async (req, res) => {
-    const { requestId } = req.body;
+// router.post(
+//   "/manage-payment-send",
+//   protect,
+//   asyncHandler(async (req, res) => {
+//     const { requestId } = req.body;
 
-    if (!requestId) {
-      res.status(400).json({ sts: "00", msg: "Please send request id" });
-    }
-   console.log(requestId);
-    const request = await WithdrawRequest.findById(requestId).populate("user");
+//     if (!requestId) {
+//       res.status(400).json({ sts: "00", msg: "Please send request id" });
+//     }
+//    console.log(requestId);
+//     const request = await WithdrawRequest.findById(requestId).populate("user");
 
-    const admin = await User.findById(req.user._id);
+//     const admin = await User.findById(req.user._id);
 
-    if (request) {
-      const getUser = request.user;
-      const userId = getUser._id;
+//     if (request) {
+//       const getUser = request.user;
+//       const userId = getUser._id;
 
-      const user = await User.findById(userId);
+//       const user = await User.findById(userId);
 
-      const amount = request.amount;
-      const withdrawable = amount - amount * 0.15;
+//       const amount = request.amount;
+//       const withdrawable = amount - amount * 0.15;
 
-      // Add 10% to user's savings income
-      if (!user.savingsIncome) {
-        user.savingsIncome = amount * 0.1;
-      } else {
-        user.savingsIncome += amount * 0.1;
-      }
+//       // Add 10% to user's savings income
+//       if (!user.savingsIncome) {
+//         user.savingsIncome = amount * 0.1;
+//       } else {
+//         user.savingsIncome += amount * 0.1;
+//       }
 
-      if (!admin.transactions) {
-        admin.transactions = [
-          {
-            category: "adminCharge",
-            amount: amount * 0.05,
-            basedOnWho: user.name,
-          },
-        ];
-      } else {
-        admin.transactions.push({
-          category: "adminCharge",
-          amount: amount * 0.05,
-          basedOnWho: user.name,
-        });
-      }
+//       if (!admin.transactions) {
+//         admin.transactions = [
+//           {
+//             category: "adminCharge",
+//             amount: amount * 0.05,
+//             basedOnWho: user.name,
+//           },
+//         ];
+//       } else {
+//         admin.transactions.push({
+//           category: "adminCharge",
+//           amount: amount * 0.05,
+//           basedOnWho: user.name,
+//         });
+//       }
 
-      request.status = true;
+//       request.status = true;
 
-      user.earning -= amount;
-      user.showWithdraw = true;
+//       user.earning -= amount;
+//       user.showWithdraw = true;
 
-      const updatedRequest = await request.save();
-      const updatedUser = await user.save();
-      const updatedAdmin = await admin.save();
+//       const updatedRequest = await request.save();
+//       const updatedUser = await user.save();
+//       const updatedAdmin = await admin.save();
 
-      if (updatedRequest && updatedUser && updatedAdmin) {
-        res.status(200).json({
-          sts: "01",
-          msg: "Request updated successfully",
-        });
-      } else {
-        res.status(400).json({ sts: "00", msg: "Request not updated" });
-      }
-    } else {
-      res.status(400).json({ sts: "00", msg: "No request found" });
-    }
-  })
-);
+//       if (updatedRequest && updatedUser && updatedAdmin) {
+//         res.status(200).json({
+//           sts: "01",
+//           msg: "Request updated successfully",
+//         });
+//       } else {
+//         res.status(400).json({ sts: "00", msg: "Request not updated" });
+//       }
+//     } else {
+//       res.status(400).json({ sts: "00", msg: "No request found" });
+//     }
+//   })
+// );
+
+export const proceedToWithdraw=async(userId)=>{
+
+try {
+  
+  const admin = await User.findOne({isAdmin:true});
+  const company = await User.findOne({isPromoter:true});
+
+    const user = await User.findById(userId);
+
+    const amount = 10;
+
+      admin.transactions.push({
+        category: "adminCharge",
+        amount: amount * 0.05,
+        basedOnWho: user.name,
+      });
+
+      user.withdrawalHistory.push({
+        amount: amount,
+        status: "Success",
+      });
+
+    const updatedAdmin = await admin.save();
+    const updatedUser = await user.save();
+
+} catch (error) {
+  res.status(400).json({ sts: "00", msg: "Request not updated" });
+}
+  
+  }
 
 // Edit profile
 router.put(

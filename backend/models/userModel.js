@@ -17,7 +17,7 @@ const transactionSchema = new mongoose.Schema(
 
 const withdrawalSchema = new mongoose.Schema(
   {
-    amount: { type: Number, double: true },
+    amount: Number,
     status: String,
   },
   {
@@ -50,6 +50,9 @@ const userSchema = new mongoose.Schema(
     ownSponserId: {
       type: String,
       required: true,
+    },
+    walletAddress:{
+      type: String
     },
     earning: {
       type: Number,
@@ -203,12 +206,6 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    requestCount: [
-      {
-        type: Number,
-        
-      },
-    ],
   },
   {
     timestamps: true,

@@ -38,7 +38,7 @@ const Finance = () => {
     const { data: upgradeInfo, error: upgradeError } = useAppSelector((state: any) => state.upgradeUserReducer);
 
     const { data: totalAmountInfo } = useAppSelector((state: any) => state.getTotalAmountsReducer);
-    let url2 = '0xcEF0C295925c3afA817D9AfB186F76c8194376C3';
+    let url2 = '0xFD539e080e7024b07166595c3D5022EbAF46927E';
     useEffect(() => {
         if (upgradeInfo) {
             setRejoinMessage(1);

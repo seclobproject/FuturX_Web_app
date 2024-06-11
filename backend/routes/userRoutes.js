@@ -47,7 +47,6 @@ router.post(
     }
 // Hash password
 const hashedPassword = bcrypt.hashSync(password, 10);
-    const requestCount = [0, 1, 2, 3, 4];
 
     
     const user = await User.create({
@@ -59,7 +58,6 @@ const hashedPassword = bcrypt.hashSync(password, 10);
       email,
       password:hashedPassword,
       ownSponserId,
-      requestCount,
     });
 
     if (user) {
@@ -133,21 +131,22 @@ router.post(
     }
 // Hash password
 const hashedPassword = bcrypt.hashSync(password, 10);
-    const requestCount = [0, 1, 2, 3, 4];
 
     
     const user = await User.create({
       sponser,
       leader,
       isLeader,
+      verifyStatus:"pending",
       name,
       email,
       password:hashedPassword,
       ownSponserId,
-      requestCount,
     });
 
     if (user) {
+    await sendMail(user.email, user.name, user.ownSponserId, password);
+
       res.status(200).json({
         id: user._id,
         sponser: user.sponser,
