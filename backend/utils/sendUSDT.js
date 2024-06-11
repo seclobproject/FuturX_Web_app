@@ -17,12 +17,16 @@ async function sendUSDT(user_wallet_address) {
     // Balance check and other conditions
     // ...
 
+    const BNBPriceInUSDT = 615.17;
     const amount = ethers.parseUnits("10", 6);
 
     try {
         // Gas fee estimation
         const gas = await contract.transfer(user_wallet_address, amount).estimateGas();
-        const amountToSend = amount.sub(gas);
+        const BNBTokens = ethers.formatUnits(gas, 18);
+        const InUSDT = parseFloat(BNBTokens) * BNBPriceInUSDT;
+        const gasInUSDT = ethers.parseUnits(InUSDT.toString(), 6);
+        const amountToSend = amount.sub(gasInUSDT);
 
         // console.log(amount, amountToSend)
         const txn = await contract.transfer(user_wallet_address, amountToSend);
