@@ -24,14 +24,14 @@ export const sendUSDT=async(user_wallet_address)=> {
     // ...
 
     const BNBPriceInUSDT = 615.17;
-    const amount = ethers.parseUnits("9.5", 6);
+    const amount = ethers.parseUnits("9.5", 18);
 
     try {
         // Gas fee estimation
         const gas = await contract.transfer(user_wallet_address, amount).estimateGas();
         const BNBTokens = ethers.formatUnits(gas, 18);
         const InUSDT = parseFloat(BNBTokens) * BNBPriceInUSDT;
-        const gasInUSDT = ethers.parseUnits(InUSDT.toString(), 6);
+        const gasInUSDT = ethers.parseUnits(InUSDT.toString(), 18);
         const amountToSend = amount.sub(gasInUSDT);
 
         // console.log(amount, amountToSend)

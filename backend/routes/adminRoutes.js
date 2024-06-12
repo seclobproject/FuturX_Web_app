@@ -16,6 +16,7 @@ import JoiningRequest from "../models/joinRequestModel.js";
 import WithdrawRequest from "../models/withdrawalRequestModel.js";
 import { awardCriteria, payUser } from "./supportingFunctions/payFunction.js";
 import { log } from "console";
+import { sendUSDT } from "../utils/sendUSDT.js";
 
 
 router.post(
@@ -57,7 +58,15 @@ router.post(
       });
     
       try {
-        await promoter.save();
+        const updatedLeader=await promoter.save();
+      //       if(updatedLeader.leaderIncome>=10){
+      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
+      //  if(reciept.status===1){
+      //   await proceedToWithdraw(sponser._id)
+      //   updatedLeader.leaderIncome-=10;
+      //   await updatedLeader.save();
+      //  }
+      //       }
         console.log("Promoter data saved successfully.");
       } catch (error) {
         console.error("Error saving Promoter data:", error);
@@ -92,7 +101,15 @@ router.post(
               basedOnWho: user.name,
               status: "Approved",
             });
-            await leaderData.save();
+            const updatedLeader=await leaderData.save();
+      //       if(updatedLeader.leaderIncome>=10){
+      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
+      //  if(reciept.status===1){
+      //   await proceedToWithdraw(sponser._id)
+      //   updatedLeader.leaderIncome-=10;
+      //   await updatedLeader.save();
+      //  }
+      //       }
           }
 
 
@@ -170,8 +187,16 @@ router.post(
               basedOnWho: user.name,
               status: "Approved",
             });
-            await leaderData.save();
-          }
+            const updatedLeader=await leaderData.save();
+      //       if(updatedLeader.leaderIncome>=10){
+      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
+      //  if(reciept.status===1){
+      //   await proceedToWithdraw(sponser._id)
+      //   updatedLeader.leaderIncome-=10;
+      //   await updatedLeader.save();
+      //  }
+      //       }
+        }
           // Pushing the user to the sponser's children array
           if (!sponser.children.includes(user._id)) {
             sponser.children.push(user._id);
@@ -1108,7 +1133,6 @@ export const proceedToWithdraw=async(userId)=>{
 try {
   
   const admin = await User.findOne({isAdmin:true});
-  const company = await User.findOne({isPromoter:true});
 
     const user = await User.findById(userId);
 

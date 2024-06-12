@@ -12,6 +12,7 @@ export const payUser =async (amount, sponser, lastWallet) =>{
   let addToTotalWallet = 0;
   let variousIncome = 0;
   let currentWallet = lastWallet;
+  
 
   // Loop until all amount is distributed
   while (amount > 0) {
@@ -32,13 +33,13 @@ export const payUser =async (amount, sponser, lastWallet) =>{
       if(totalWallet % 250 === 0){
         currentWallet = 'rebirth';
       }
-      if(earning>=10){
-       const reciept= await sendUSDT(sponser.walletAddress)
-       if(reciept.status===1){
-        await proceedToWithdraw(sponser._id)
-        earning -= 10;
-       }
-      }
+      // if(earning>=10){
+      //  const reciept= await sendUSDT(sponser.walletAddress)
+      //  if(reciept.status===1){
+      //   await proceedToWithdraw(sponser._id)
+      //   earning -= 10;
+      //  }
+      // }
       
     } else if(currentWallet==='joining'){
 

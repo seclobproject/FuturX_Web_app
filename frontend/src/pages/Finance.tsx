@@ -25,6 +25,7 @@ const Finance = () => {
     const MySwal = withReactContent(Swal);
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const [isLoadingButton, SetIsLoadingButton] = useState(false);
     const [rejoinMessage, setRejoinMessage] = useState(0);
     const [transactionID, setTransactionID] = useState('');
     const [refresh, setRefresh] = useState('');
@@ -53,29 +54,44 @@ const Finance = () => {
     const { open, selectedNetworkId } = useWeb3ModalState()
 
     const sendUSDT = async () => {
+        SetIsLoadingButton(true)
         try {
-            if (!isConnected) throw Error('Wallet is not connected');
-            if (!walletProvider) throw Error('Signer failed !');
-
+            if (!isConnected) throw new Error('Wallet is not connected');
+            if (!walletProvider) throw new Error('Signer failed!');
+    
             const ethersProvider = new BrowserProvider(walletProvider);
             const signer = await ethersProvider.getSigner();
             const owner = await signer.getAddress();
-
+    console.log("owner id",owner);
+    
             const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
-            const amount = parseUnits('50', 6);
-
+            const amount = parseUnits('50.01', 18);
+    
+            // Get the wallet balance
+            const balance = await contract.balanceOf(owner);
+    
+            // Check if the balance is less than the transfer amount
+            if (balance<amount) {
+                throw new Error('Insufficient balance');
+            }
+    
             const txn = await contract.transfer(COMPANY_WALLET, amount);
-            const reciept = await txn.wait();
-
-            console.log(reciept.hash, 'status'); // Transaction Hash
-            if (reciept.status === 1) {
+            const receipt = await txn.wait();
+    
+            console.log(receipt.hash, 'status'); // Transaction Hash
+            if (receipt.status === 1) {
                 dispatch(verifyUserForAdmin(userInfo?._id));
             }
         } catch (e) {
             // Handle error here
             console.log(e);
+            throw new Error('You rejected your transaction');
+        }
+        finally{
+            SetIsLoadingButton(false)
         }
     };
+    
 
     // TODO
     // The value data have something to do in ui
@@ -384,8 +400,11 @@ const Finance = () => {
                     <div className="flex items-center">
                         <WalletConnectButton />
                         {address && userInfo && userInfo.userStatus == false && (
-                            <button type="button" onClick={sendUSDT} className="btn btn-outline-success ml-3">
-                                Activate account
+                            <button type="button" onClick={sendUSDT} className="btn btn-outline-success ml-3"
+                            disabled={isLoadingButton}
+                            >
+                                
+                                {isLoadingButton ? 'Loading...' : 'Transfer $50'}
                             </button>
                         )}
                     </div>
