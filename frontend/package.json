@@ -48,6 +48,7 @@
         "react-countup": "^6.3.2",
         "react-dom": "^18.2.0",
         "react-export-table-to-excel": "^1.0.6",
+        "react-fast-marquee": "^1.6.4",
         "react-flatpickr": "^3.10.13",
         "react-images-uploading": "^3.1.7",
         "react-popper": "^2.3.0",

@@ -185,6 +185,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    withdrawAmount: {
+      type: Number,
+      default: 0,
+    },
     withdrawalHistory: [withdrawalSchema],
     generationIncome: {
       type: Number,

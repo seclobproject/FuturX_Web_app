@@ -14,6 +14,7 @@ import { getTotalAmounts, verifyUser, verifyUserForAdmin } from '../store/adminS
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
+import Marquee from 'react-fast-marquee';
 
 import { useWeb3ModalState } from '@web3modal/ethers/react';
 import { ERC20_ABI } from '../ERC20_ABI';
@@ -88,7 +89,9 @@ const Finance = () => {
             throw new Error('You rejected your transaction');
         }
         finally{
-            SetIsLoadingButton(false)
+            if (userInfo && userInfo.userStatus === true) {
+                SetIsLoadingButton(false);
+              }
         }
     };
     
@@ -350,44 +353,18 @@ const Finance = () => {
                                     </div>
                                 </div>
                             </div>
-                            {userInfo && userInfo.isAdmin && (
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                                        <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Earning</div>
-                                        </div>
-                                        <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.earningSum}</div>
-                                        </div>
-                                    </div>
-                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                                        <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Autopool</div>
-                                        </div>
-                                        <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalAutoPoolBank}</div>
-                                        </div>
-                                    </div>
-                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                                        <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Rewards</div>
-                                        </div>
-                                        <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.rewards}</div>
-                                        </div>
-                                    </div>
-                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                                        <div className="flex justify-between">
-                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Savings</div>
-                                        </div>
-                                        <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalSaving}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            )}
+                            
                         </div>
                     </div> */}
+                    <div className="relative block overflow-hidden bg-[#DDE4EB] py-2 mb-6 w-full cursor-pointer">
+                            <Marquee className=" text-primary text-[16px] font-semibold w-full h-full">
+                                
+                                    <span className="inline min-w-full h-full text-center whitespace-nowrap ">
+                                  <span style={{color:"red"}}> Beta version:</span>  If you see any error please contact us at support@futurx.vip&nbsp;&nbsp;&nbsp;
+                                    </span>
+                            
+                            </Marquee>
+                        </div>
 
             <div className="panel" style={{ margin: '20px' }}>
                 <div className="flex items-center justify-between mb-5">
@@ -473,6 +450,42 @@ const Finance = () => {
                             </div>
                         </div>
                     </div>
+                    {userInfo && userInfo.isAdmin && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                                        <div className="flex justify-between">
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Earning</div>
+                                        </div>
+                                        <div className="flex flex-col justify-center mt-5">
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.earningSum}</div>
+                                        </div>
+                                    </div>
+                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                                        <div className="flex justify-between">
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Autopool</div>
+                                        </div>
+                                        <div className="flex flex-col justify-center mt-5">
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalAutoPoolBank}</div>
+                                        </div>
+                                    </div>
+                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                                        <div className="flex justify-between">
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Rewards</div>
+                                        </div>
+                                        <div className="flex flex-col justify-center mt-5">
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.rewards}</div>
+                                        </div>
+                                    </div>
+                                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                                        <div className="flex justify-between">
+                                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Withdrawal</div>
+                                        </div>
+                                        <div className="flex flex-col justify-center mt-5">
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalSaving}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
                 </div>
             </div>
 

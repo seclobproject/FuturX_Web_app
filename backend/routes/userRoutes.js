@@ -741,6 +741,34 @@ router.get(
   })
 );
 
+
+//get all withdrawal history
+
+router.get(
+  "/get-withdrawal-History",
+  protect,
+  asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    const user = await User.findById(userId);
+
+    if (user) {
+      const transactions = user.withdrawalHistory;
+      if (transactions.length > 0) {
+        res.status(200).json(transactions);
+      } else {
+        res.status(400).json({
+          sts: "00",
+          msg: "No transactions found!",
+        });
+      }
+    } else {
+      res.status(400).json({
+        sts: "00",
+        msg: "No transactions found!",
+      });
+    }
+  })
+);
 // Get reward fileName
 router.get(
   "/get-reward",

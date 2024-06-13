@@ -1,7 +1,8 @@
 import nodemailer from "nodemailer";
 
-const CLIENT_ID = "shyamkumarbeypore@gmail.com";
-const CLIENT_SECRET = "whvp xrxb hkxs eoxu"
+const CLIENT_ID = "futurxglobal@gmail.com";
+const CLIENT_SECRET = "kurl xrzc pdeo tdbt";
+const url="https://futurx.vip"
 
 export const sendMail = (mailId, name, sponserid, password) => {
   const recipient = mailId;
@@ -17,11 +18,11 @@ export const sendMail = (mailId, name, sponserid, password) => {
     },
   });
   const mailOptions = {
-    from: `FUTURX GROUP <shyamkumarbeypore@gmail.com>`,
+    from: `FUTURX GROUP <futurxglobal@gmail.com>`,
     to: `${recipient}`,
     subject: `Hi ${name}, Registration successful.`,
     text: `Hi ${name}, Welcome to FUTUR X`,
-    html: `<h4>Congrats! You have joined the FUTUR X Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Password: ${password}</p>`,
+    html: `<h4>Congrats! You have joined the FUTUR X Group.</h4><p>Your sponserID is <strong>${sponserid}</strong><br/>Username: ${recipient}<br />Password: ${password}</p></p><p>You have successfully got the 10 digital visiting cards when you give 50$.</p><br />Website: <a href="${url}">${url}</a></p>`,
   };
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {

@@ -1135,11 +1135,12 @@ export const proceedToWithdraw=async(userId)=>{
         amount: amount * 0.05,
         basedOnWho: user.name,
       });
-
+      user.withdrawAmount+=amount;
       user.withdrawalHistory.push({
         amount: amount,
         status: "Success",
       });
+
 
     const updatedAdmin = await admin.save();
     const updatedUser = await user.save();
@@ -1220,13 +1221,13 @@ router.get(
     const totalEarning = await User.aggregate([
       {
         $match: {
-          earning: { $exists: true },
+          totalWallet: { $exists: true },
         },
       },
       {
         $group: {
           _id: null,
-          totalEarning: { $sum: "$earning" },
+          totalEarning: { $sum: "$totalWallet" },
         },
       },
     ]);
@@ -1234,13 +1235,13 @@ router.get(
     const totalSaving = await User.aggregate([
       {
         $match: {
-          savingsIncome: { $exists: true },
+          withdrawAmount: { $exists: true },
         },
       },
       {
         $group: {
           _id: null,
-          totalEarning: { $sum: "$savingsIncome" },
+          totalEarning: { $sum: "$withdrawAmount" },
         },
       },
     ]);
