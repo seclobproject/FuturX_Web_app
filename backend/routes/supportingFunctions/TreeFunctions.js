@@ -148,9 +148,9 @@ export const addCommissionToLine = async (
     if(updatedUser){
      await awardCriteria(updatedUser)
     }
-    if(updatedUser.rejoiningWallet%50){
+    // if(updatedUser.rejoiningWallet%50){
       
-    }
+    // }
 
     // Move to the parent of the current user
     currentUserId = currentUser.nodeId;
