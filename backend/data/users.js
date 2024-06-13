@@ -20,7 +20,7 @@ const users = [
   {
     sponser: null,
     name: "Company",
-    email: "company@gmail.com",
+    email: "shajanponnamattom@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
     isPromoter: true,
@@ -37,7 +37,7 @@ const users = [
   {
     sponser: null,
     name: "Company Owner 1",
-    email: "companyowner1@gmail.com",
+    email: "pappachan9229@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
     isPromoter: true,
@@ -54,7 +54,7 @@ const users = [
   {
     sponser: null,
     name: "Company Owner 2",
-    email: "companyowner2@gmail.com",
+    email: "shajanbackup@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
     isPromoter: true,

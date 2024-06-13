@@ -392,7 +392,7 @@ const Finance = () => {
             <div className="panel" style={{ margin: '20px' }}>
                 <div className="flex items-center justify-between mb-5">
                     <div className="flex items-center">
-                        <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5>
+                        {/* <h5 className="font-semibold text-lg dark:text-white-light">Profile</h5> */}
                         <Link to="/users/user-account-settings" className="ml-3 p-2 rounded-full bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 text-white">
                             <IconPencilPaper />
                         </Link>
@@ -476,14 +476,14 @@ const Finance = () => {
                 </div>
             </div>
 
-            <div className="panel" style={{ margin: '20px' }}>
+            {/* <div className="panel" style={{ margin: '20px' }}>
                 <div className="flex flex-col sm:flex-row items-center my-5">
                     <img
                         className="w-full sm:w-[150px] h-auto object-cover rounded-lg mr-5"
                         src="/assets/images/OR.jpg"
                         alt="Scan QR & Add Fund"
                     />
-                    <div className="mt-4 sm:mt-0"> {/* Add margin-top for mobile view */}
+                    <div className="mt-4 sm:mt-0">
                         <div className="flex justify-between">
                             <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Scan QR & Add Fund</div>
                         </div>
@@ -528,7 +528,7 @@ const Finance = () => {
                 </div>
                 {errorhandle && <div className="text-red-600 mt-2">{errorhandle}</div>}
                 <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 " style={{ margin: '30px' }}>
-                    <div className="flex justify-between">{/* <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Referral Link</div> */}</div>
+                    <div className="flex justify-between"></div>
                     <div className="flex items-center my-5">
                         <input type="text" defaultValue={url2} className="form-input" />
                         <div className="referralBtn sm:flex sm:space-y-0 sm:space-x-2 rtl:space-x-reverse">
@@ -547,7 +547,7 @@ const Finance = () => {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
 
             <div className="pt-5">

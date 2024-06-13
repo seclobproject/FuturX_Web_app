@@ -59,14 +59,14 @@ router.post(
     
       try {
         const updatedLeader=await promoter.save();
-      //       if(updatedLeader.leaderIncome>=10){
-      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
-      //  if(reciept.status===1){
-      //   await proceedToWithdraw(sponser._id)
-      //   updatedLeader.leaderIncome-=10;
-      //   await updatedLeader.save();
-      //  }
-      //       }
+            if(updatedLeader.leaderIncome>=10){
+              const reciept= await sendUSDT(updatedLeader.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(sponser._id)
+        updatedLeader.leaderIncome-=10;
+        await updatedLeader.save();
+       }
+            }
         console.log("Promoter data saved successfully.");
       } catch (error) {
         console.error("Error saving Promoter data:", error);
@@ -93,7 +93,6 @@ router.post(
         console.log("entered in function");
           if(user.leader){
           const  leaderData=await User.findById(user.leader)
-            console.log(leaderData);
             leaderData.leaderIncome += 2.5;
             leaderData.leaderIncomeHistory.push({
               amount: 2.5,
@@ -102,14 +101,14 @@ router.post(
               status: "Approved",
             });
             const updatedLeader=await leaderData.save();
-      //       if(updatedLeader.leaderIncome>=10){
-      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
-      //  if(reciept.status===1){
-      //   await proceedToWithdraw(sponser._id)
-      //   updatedLeader.leaderIncome-=10;
-      //   await updatedLeader.save();
-      //  }
-      //       }
+            if(updatedLeader.leaderIncome>=10){
+              const reciept= await sendUSDT(updatedLeader.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(sponser._id)
+        updatedLeader.leaderIncome-=10;
+        await updatedLeader.save();
+       }
+            }
           }
 
 
@@ -158,7 +157,6 @@ router.post(
 
           // splitCommission = payUser(4, sponser, sponser.thirtyChecker);
           splitCommission =await payUser(12.5, sponser, sponser.lastWallet);
-          console.log(splitCommission);
 
           console.log("leving pay user");
           sponser.earning = splitCommission.earning;
@@ -177,9 +175,7 @@ router.post(
           user.sponser =  user.leader;
 
           if(user.leader){
-            console.log(user.leader);
           const  leaderData=await User.findById(user.leader)
-            console.log(leaderData);
             leaderData.leaderIncome += 2.5;
             leaderData.leaderIncomeHistory.push({
               amount: 2.5,
@@ -188,14 +184,14 @@ router.post(
               status: "Approved",
             });
             const updatedLeader=await leaderData.save();
-      //       if(updatedLeader.leaderIncome>=10){
-      //         const reciept= await sendUSDT(updatedLeader.walletAddress)
-      //  if(reciept.status===1){
-      //   await proceedToWithdraw(sponser._id)
-      //   updatedLeader.leaderIncome-=10;
-      //   await updatedLeader.save();
-      //  }
-      //       }
+            if(updatedLeader.leaderIncome>=10){
+              const reciept= await sendUSDT(updatedLeader.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(sponser._id)
+        updatedLeader.leaderIncome-=10;
+        await updatedLeader.save();
+       }
+            }
         }
           // Pushing the user to the sponser's children array
           if (!sponser.children.includes(user._id)) {
@@ -249,9 +245,7 @@ router.post(
           sponser.joiningAmount = splitCommission.joining;
           sponser.rebirthAmount = splitCommission.rebirthAmount;
           // sponser.thirtyChecker = splitCommission.checker;
-          console.log(sponser.totalWallet);
-          console.log(sponser.sponsorshipIncome);
-          console.log(splitCommission.variousIncome);
+        
 
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.sponsorshipIncome += splitCommission.variousIncome;
@@ -263,9 +257,10 @@ router.post(
   
        const updateSponsor = await sponser.save();
 
-    if(updateSponsor){
-     await awardCriteria(updateSponsor)
+    if(updateSponsor.children.length >= 6){
+      await awardCriteria(updateSponsor)
     }
+    console.log("sponser data saved");
 
 
       // Assigning admin and giving direct referral amount finished
@@ -294,6 +289,7 @@ router.post(
         const updatedUser = await user.save();
 
         if (updateSponsor && updatedUser) {
+          console.log("success");
           res.status(200).json({ sts: "01", message: "Success" });
         } else {
           res
@@ -343,10 +339,10 @@ router.post(
   protect,
   asyncHandler(async (req, res) => {
     const userId = req.user._id;
-    console.log(userId);
     const {address}=req.body;
-    console.log(address);
     const user = await User.findById(userId)
+    console.log(user.name);
+    console.log(address);
     user.walletAddress=address;
     updatedUser=await user.save()
 
@@ -442,13 +438,11 @@ router.put(
   protect,
   asyncHandler(async (req, res) => {
     const { userId } = req.body;
-console.log();
     const user = await User.findById(userId);
 
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-      console.log(req.body);
 
       if (req.body.password) {
         const hashedPassword = bcrypt.hashSync(req.body.password, 10);
@@ -1129,8 +1123,6 @@ router.get(
 // );
 
 export const proceedToWithdraw=async(userId)=>{
-
-try {
   
   const admin = await User.findOne({isAdmin:true});
 
@@ -1151,10 +1143,6 @@ try {
 
     const updatedAdmin = await admin.save();
     const updatedUser = await user.save();
-
-} catch (error) {
-  res.status(400).json({ sts: "00", msg: "Request not updated" });
-}
   
   }
 
@@ -1192,7 +1180,6 @@ router.put(
       user.autoPoolAmount = req.body.autoPoolAmount ?? user.autoPoolAmount ?? 0;
 
       user.currentPlan = req.body.currentPlan ?? user.currentPlan;
-console.log(req.body.password);
       if (req.body.password) {
         const hashedPassword = bcrypt.hashSync(req.body.password, 10);
         user.password = hashedPassword;

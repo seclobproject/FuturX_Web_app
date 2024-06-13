@@ -12,7 +12,7 @@ const mnemonic = "put inmate alcohol body give cannon erosion essence reform isl
 const mnemonicWallet=ethers.Wallet.fromPhrase(mnemonic)
 const KEY=mnemonicWallet.privateKey
 // const USDT_ADDRESS = process.env.USDT_ADDRESS;
-const USDT_ADDRESS = "0xFD539e080e7024b07166595c3D5022EbAF46927E";
+const USDT_ADDRESS = "0x55d398326f99059fF775485246999027B3197955";
 
 const provider = new ethers.JsonRpcProvider(RPC_URI);
 const signer = new ethers.Wallet(KEY, provider);
@@ -23,25 +23,23 @@ export const sendUSDT=async(user_wallet_address)=> {
     // Balance check and other conditions
     // ...
 
-    const BNBPriceInUSDT = 615.17;
+    // const BNBPriceInUSDT = 615.17;
     const amount = ethers.parseUnits("9.5", 18);
 
     try {
         // Gas fee estimation
-        const gas = await contract.transfer(user_wallet_address, amount).estimateGas();
-        const BNBTokens = ethers.formatUnits(gas, 18);
-        const InUSDT = parseFloat(BNBTokens) * BNBPriceInUSDT;
-        const gasInUSDT = ethers.parseUnits(InUSDT.toString(), 18);
-        const amountToSend = amount.sub(gasInUSDT);
+        // const gas = contract.transfer.estimateGas(user_wallet_address, amount)
+        // const BNBTokens = ethers.formatUnits(gas, 18);
+        // const InUSDT = parseFloat(BNBTokens) * BNBPriceInUSDT;
+        // const gasInUSDT = ethers.parseUnits(InUSDT.toString(), 18);
+        // const amountToSend = amount.sub(gasInUSDT);
 
         // console.log(amount, amountToSend)
-        const txn = await contract.transfer(user_wallet_address, amountToSend);
+        const txn = await contract.transfer(user_wallet_address, amount);
         const reciept = await txn.wait()
-
-  
-
         return reciept // If reciept.status = 1, success
     } catch (e) {
+        console.log(e);
         throw Error("transaction Failed!")
     }
 }

@@ -235,9 +235,9 @@ console.log(userInfo,"yser from headr")
                                 <li>
                                     <NavLink to="/all-members">{t('All Members')}</NavLink>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <NavLink to="/withdraw-requests">{t('Manage Withdraw Requests')}</NavLink>
-                                </li>
+                                </li> */}
                                 <li>
                                     <NavLink to="/rejoining-wallet">{t('Rejoining Wallet')}</NavLink>
                                 </li>
@@ -294,18 +294,18 @@ console.log(userInfo,"yser from headr")
                     </li>
                     <li className="menu nav-item relative">
                         <button type="button" className="nav-link">
-                            <div className="flex items-center">
+                            {/* <div className="flex items-center">
                                 <IconMenuComponents className="shrink-0" />
                                 <span className="px-1">{t('Withdraw')}</span>
-                            </div>
+                            </div> */}
                             <div className="right_arrow">
                                 <IconCaretDown />
                             </div>
                         </button>
                         <ul className="sub-menu">
-                            <li>
+                            {/* <li>
                                 <NavLink to="/withdraw">{t('Request Withdraw')}</NavLink>
-                            </li>
+                            </li> */}
                             <li>
                                 <NavLink to="/withdraw-history">{t('Withdrawal History')}</NavLink>
                             </li>

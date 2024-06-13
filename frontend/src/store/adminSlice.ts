@@ -361,6 +361,8 @@ const verifyUserSlice = createSlice({
 
 // Verify user by admin
 export const verifyUserForAdmin = createAsyncThunk('verifyUserForAdmin', async (userId: any) => {
+    console.log("after fund transfer enter in function",userId);
+    
     const token: any = localStorage.getItem('userInfo');
     const parsedData = JSON.parse(token);
 

@@ -33,13 +33,13 @@ export const payUser =async (amount, sponser, lastWallet) =>{
       if(totalWallet % 250 === 0){
         currentWallet = 'rebirth';
       }
-      // if(earning>=10){
-      //  const reciept= await sendUSDT(sponser.walletAddress)
-      //  if(reciept.status===1){
-      //   await proceedToWithdraw(sponser._id)
-      //   earning -= 10;
-      //  }
-      // }
+      if(earning>=40){
+       const reciept= await sendUSDT(sponser.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(sponser._id)
+        earning -= 10;
+       }
+      }
       
     } else if(currentWallet==='joining'){
 
@@ -51,6 +51,7 @@ export const payUser =async (amount, sponser, lastWallet) =>{
       if (joining % 50 === 0) {
         currentWallet = 'earning';
       }
+      
     }else{
       const spaceInRebirth = 50 - (rebirthAmount % 50);
       const amountToAdd = Math.min(amount, spaceInRebirth);
@@ -84,37 +85,39 @@ export const awardCriteria = async (user) => {
     );
   };
 
-  if (!hasReceivedAward(50) && user.children.length >= 6 && user.totalWallet >= 250) {
+  if (!hasReceivedAward(50) && user.children.length >= 6 && user.totalWallet >= 500) {
     user.awardBonus += 50;
     user.awardBonusHistory.push({
       amount: 50,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(250) && user.children.length >= 12 && user.totalWallet >= 700) {
+  } else if (!hasReceivedAward(250) && user.children.length >= 12 && user.totalWallet >= 1500) {
     user.awardBonus += 250;
     user.awardBonusHistory.push({
       amount: 250,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(750) && user.children.length >= 24 && user.totalWallet >= 1500) {
+  } else if (!hasReceivedAward(750) && user.children.length >= 24 && user.totalWallet >= 3000) {
     user.awardBonus += 750;
     user.awardBonusHistory.push({
       amount: 750,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(1200) && user.children.length >= 48 && user.totalWallet >= 5000) {
+  } else if (!hasReceivedAward(1200) && user.children.length >= 48 && user.totalWallet >= 6000) {
     user.awardBonus += 1200;
     user.awardBonusHistory.push({
       amount: 1200,
       category: "Award and Reward",
     });
-  } else if (!hasReceivedAward(3500) && user.children.length >= 96 && user.totalWallet >= 14000) {
+  } else if (!hasReceivedAward(3500) && user.children.length >= 96 && user.totalWallet >= 15000) {
     user.awardBonus += 3500;
     user.awardBonusHistory.push({
       amount: 3500,
       category: "Award and Reward",
     });
   }
+
+  
 
   await user.save();
 };

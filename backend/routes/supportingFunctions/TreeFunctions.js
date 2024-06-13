@@ -88,14 +88,14 @@ export const addCommissionToLine = async (
         status: "Approved",
       });
       const updatedLeader=await company.save()
-//       if(updatedLeader.levelBalance>=10){
-//         const reciept= await sendUSDT(updatedLeader.walletAddress)
-//  if(reciept.status===1){
-//   await proceedToWithdraw(sponser._id)
-//   updatedLeader.levelBalance-=10;
-//   await updatedLeader.save();
-//  }
-//       }
+      if(updatedLeader.levelBalance>=10){
+        const reciept= await sendUSDT(updatedLeader.walletAddress)
+ if(reciept.status===1){
+  await proceedToWithdraw(sponser._id)
+  updatedLeader.levelBalance-=10;
+  await updatedLeader.save();
+ }
+      }
       break;
     }
     

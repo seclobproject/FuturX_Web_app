@@ -270,6 +270,7 @@ router.get(
 
         sponser.sponsorshipIncome += splitCommission.variousIncome;
 
+
         const updatedSponsor = await sponser.save();
             if(updatedSponsor){
               await awardCriteria(updatedSponsor)
@@ -277,7 +278,7 @@ router.get(
 
         if (user.nodeId) {
           
-          const addCommission = await addCommissionToLine(user.nodeId, 7);
+          const addCommission = await addCommissionToLine(user.nodeId, 7,user);
 
           const updatedUser = await user.save();
 
@@ -319,14 +320,12 @@ router.put(
     if (user) {
       user.name = req.body.name || user.name;
       user.email = req.body.email || user.email;
-console.log(req.body);
       if (req.body.password) {
         const hashedPassword = bcrypt.hashSync(req.body.password, 10);
           user.password = hashedPassword;
       }
 
       const updatedUser = await user.save();
-      console.log(updatedUser);
 
       // const token = jwt.sign(
       //   { userId: user._id },
