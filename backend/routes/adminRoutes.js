@@ -62,7 +62,7 @@ router.post(
             if(updatedLeader.leaderIncome>=10){
               const reciept= await sendUSDT(updatedLeader.walletAddress)
        if(reciept.status===1){
-        await proceedToWithdraw(sponser._id)
+        await proceedToWithdraw(updatedLeader._id)
         updatedLeader.leaderIncome-=10;
         await updatedLeader.save();
        }
@@ -104,7 +104,7 @@ router.post(
             if(updatedLeader.leaderIncome>=10){
               const reciept= await sendUSDT(updatedLeader.walletAddress)
        if(reciept.status===1){
-        await proceedToWithdraw(sponser._id)
+        await proceedToWithdraw(updatedLeader._id)
         updatedLeader.leaderIncome-=10;
         await updatedLeader.save();
        }
@@ -187,7 +187,7 @@ router.post(
             if(updatedLeader.leaderIncome>=10){
               const reciept= await sendUSDT(updatedLeader.walletAddress)
        if(reciept.status===1){
-        await proceedToWithdraw(sponser._id)
+        await proceedToWithdraw(updatedLeader._id)
         updatedLeader.leaderIncome-=10;
         await updatedLeader.save();
        }

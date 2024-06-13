@@ -232,24 +232,15 @@ router.get(
 
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
+    const promoters = await User.find({ isPromoter: true });
 
-    if (user.joiningAmount >= 50) {
 
       user.joiningAmount -= 50;
 
       admin.rejoiningWallet += 50;
 
-      if (admin.autoPoolBank) {
-        admin.autoPoolBank += 5;
-      } else {
-        admin.autoPoolBank = 5;
-      }
-
-      if (admin.rewards) {
-        admin.rewards += 2.5;
-      } else {
-        admin.rewards = 2.5;
-      }
+      admin.autoPoolBank += 5;
+      admin.rewards += 2.5;
 
       const updateAdmin = await admin.save();
 
@@ -302,11 +293,7 @@ router.get(
         }
       }
       // Code to add money to sponsor only end
-    } else {
-      res
-        .status(400)
-        .json({ sts: "00", msg: "Insufficient rejoining amount!" });
-    }
+    
   })
 );
 

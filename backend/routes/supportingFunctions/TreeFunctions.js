@@ -91,7 +91,7 @@ export const addCommissionToLine = async (
       if(updatedLeader.levelBalance>=10){
         const reciept= await sendUSDT(updatedLeader.walletAddress)
  if(reciept.status===1){
-  await proceedToWithdraw(sponser._id)
+  await proceedToWithdraw(updatedLeader._id)
   updatedLeader.levelBalance-=10;
   await updatedLeader.save();
  }
@@ -147,6 +147,9 @@ export const addCommissionToLine = async (
     const updatedUser=await currentUser.save();
     if(updatedUser){
      await awardCriteria(updatedUser)
+    }
+    if(updatedUser.rejoiningWallet%50){
+      
     }
 
     // Move to the parent of the current user
