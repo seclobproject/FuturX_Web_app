@@ -575,9 +575,9 @@ const Finance = () => {
                         </div>
                         <div className="flex items-center justify-between mt-5">
                             <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.joiningAmount.toFixed(2)}</div>
-                            <button type="button" onClick={upgradeHandler} className="btn rounded-lg p-2 mt-4 text-white">
+                            {/* <button type="button" onClick={upgradeHandler} className="btn rounded-lg p-2 mt-4 text-white">
                                 Rejoin
-                            </button>
+                            </button> */}
                         </div>
                         {rejoinMessage === 1 && <div className="mt-2 text-white">You are successfully upgraded.</div>}
                         {rejoinMessage === 2 && <div className="mt-2  text-white ">You are not eligible for upgrade as of now</div>}
@@ -606,6 +606,14 @@ const Finance = () => {
                         <div className="flex items-center mt-5">
                             <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white"> {userInfo && userInfo.children.length} </div>
                             {/* <div className="badge bg-white/30">- 2.35% </div> */}
+                        </div>
+                    </div>
+                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                        <div className="flex justify-between">
+                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Level Balance Credit</div>
+                        </div>
+                        <div className="flex items-center mt-5">
+                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white"> {userInfo && userInfo.levelBalance.toFixed(2)} </div>
                         </div>
                     </div>
 

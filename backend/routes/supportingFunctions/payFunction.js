@@ -33,7 +33,7 @@ export const payUser =async (amount, sponser, lastWallet) =>{
       if(totalWallet % 250 === 0){
         currentWallet = 'rebirth';
       }
-      if(earning>=40){
+      if(earning>=10){
        const reciept= await sendUSDT(sponser.walletAddress)
        if(reciept.status===1){
         await proceedToWithdraw(sponser._id)

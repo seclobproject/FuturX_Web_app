@@ -1,4 +1,6 @@
 import User from "../../models/userModel.js";
+// import { sendUSDT } from "../../utils/sendUSDT.js";
+// import { proceedToWithdraw } from "../adminRoutes.js";
 import { awardCriteria, payUser } from "./payFunction.js";
 
 export const bfsNew = async (startingUser, newUserId, left, right) => {
@@ -88,14 +90,14 @@ export const addCommissionToLine = async (
         status: "Approved",
       });
       const updatedLeader=await company.save()
-      if(updatedLeader.levelBalance>=10){
-        const reciept= await sendUSDT(updatedLeader.walletAddress)
- if(reciept.status===1){
-  await proceedToWithdraw(updatedLeader._id)
-  updatedLeader.levelBalance-=10;
-  await updatedLeader.save();
- }
-      }
+//       if(updatedLeader.levelBalance>=10){
+//         const reciept= await sendUSDT(updatedLeader.walletAddress)
+//  if(reciept.status===1){
+//   await proceedToWithdraw(updatedLeader._id)
+//   updatedLeader.levelBalance-=10;
+//   await updatedLeader.save();
+//  }
+      // }
       break;
     }
     

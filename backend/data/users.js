@@ -15,12 +15,11 @@ const users = [
     currentPlan: "beginner",
     autoPool: false,
     joiningAmount: 0,
-    requestCount: [0, 1, 2, 3, 4]
   },
   {
     sponser: null,
-    name: "Company",
-    email: "shajanponnamattom@gmail.com",
+    name: "Shajan Backup",
+    email: "shajanbackup@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
     isPromoter: true,
@@ -32,11 +31,10 @@ const users = [
     currentPlan: "beginner",
     autoPool: true,
     joiningAmount: 0,
-    requestCount: [0, 1, 2, 3, 4]
   },
   {
     sponser: null,
-    name: "Company Owner 1",
+    name: "Pappachan",
     email: "pappachan9229@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
@@ -49,12 +47,11 @@ const users = [
     currentPlan: "beginner",
     autoPool: true,
     joiningAmount: 0,
-    requestCount: [0, 1, 2, 3, 4]
   },
   {
     sponser: null,
-    name: "Company Owner 2",
-    email: "shajanbackup@gmail.com",
+    name: "Shajan",
+    email: "shajanponnamattom@gmail.com",
     password: bcrypt.hashSync("pass123", 10),
     isAdmin: false,
     isPromoter: true,
@@ -66,7 +63,6 @@ const users = [
     currentPlan: "beginner",
     autoPool: true,
     joiningAmount: 0,
-    requestCount: [0, 1, 2, 3, 4]
   },
 
 ];
