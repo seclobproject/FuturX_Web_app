@@ -232,8 +232,9 @@ router.get(
 
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
-    const promoters = await User.find({ isPromoter: true });
+    // const promoters = await User.find({ isPromoter: true });
 
+    if (user.joiningAmount >= 50) {
 
       user.joiningAmount -= 50;
 
@@ -293,7 +294,11 @@ router.get(
         }
       }
       // Code to add money to sponsor only end
-    
+    } else {
+      res
+        .status(400)
+        .json({ sts: "00", msg: "Insufficient rejoining amount!" });
+    }
   })
 );
 

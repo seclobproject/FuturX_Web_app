@@ -614,6 +614,7 @@ const Finance = () => {
                         </div>
                         <div className="flex items-center mt-5">
                             <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white"> {userInfo && userInfo.levelBalance.toFixed(2)} </div>
+                            {/* <div className="badge bg-white/30">- 2.35% </div> */}
                         </div>
                     </div>
 
