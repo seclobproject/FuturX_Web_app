@@ -294,10 +294,10 @@ console.log(userInfo,"yser from headr")
                     </li>
                     <li className="menu nav-item relative">
                         <button type="button" className="nav-link">
-                            {/* <div className="flex items-center">
+                            <div className="flex items-center">
                                 <IconMenuComponents className="shrink-0" />
                                 <span className="px-1">{t('Withdraw')}</span>
-                            </div> */}
+                            </div>
                             <div className="right_arrow">
                                 <IconCaretDown />
                             </div>

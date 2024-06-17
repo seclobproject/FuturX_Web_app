@@ -1137,7 +1137,9 @@ export const proceedToWithdraw=async(userId)=>{
       });
       user.withdrawAmount+=amount;
       user.withdrawalHistory.push({
+        name:user.name,
         amount: amount,
+        category:"withdraw amount",
         status: "Success",
       });
 
@@ -1241,7 +1243,7 @@ router.get(
       {
         $group: {
           _id: null,
-          totalEarning: { $sum: "$withdrawAmount" },
+          totalSaving: { $sum: "$withdrawAmount" },
         },
       },
     ]);

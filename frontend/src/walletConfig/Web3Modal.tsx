@@ -23,7 +23,7 @@ export const projectId = 'b4024fbeee0399ffbcb8201ed2e7c652'
 const metadata = {
     name: 'My Website',
     description: 'My Website description',
-    url: 'https://mywebsite.com', // origin must match your domain & subdomain
+    url: 'https://login.futurx.vip', // origin must match your domain & subdomain
     icons: ['https://avatars.mywebsite.com/']
 }
 

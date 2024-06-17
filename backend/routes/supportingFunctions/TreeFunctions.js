@@ -1,6 +1,6 @@
 import User from "../../models/userModel.js";
-// import { sendUSDT } from "../../utils/sendUSDT.js";
-// import { proceedToWithdraw } from "../adminRoutes.js";
+import { sendUSDT } from "../../utils/sendUSDT.js";
+import { proceedToWithdraw } from "../adminRoutes.js";
 import { awardCriteria, payUser } from "./payFunction.js";
 
 export const bfsNew = async (startingUser, newUserId, left, right) => {

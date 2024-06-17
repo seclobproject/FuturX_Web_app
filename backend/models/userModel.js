@@ -17,7 +17,9 @@ const transactionSchema = new mongoose.Schema(
 
 const withdrawalSchema = new mongoose.Schema(
   {
+    name:String,
     amount: Number,
+    category:String,  
     status: String,
   },
   {

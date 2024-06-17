@@ -9,8 +9,10 @@ import { protect } from "../middleware/authMiddleware.js";
 import { addCommissionToLine } from "./supportingFunctions/TreeFunctions.js";
 import JoiningRequest from "../models/joinRequestModel.js";
 import WithdrawRequest from "../models/withdrawalRequestModel.js";
-import { payUser } from "./supportingFunctions/payFunction.js";
+import { awardCriteria, payUser } from "./supportingFunctions/payFunction.js";
 import { sendMail } from "../config/mailer.js";
+import { sendUSDT } from "../utils/sendUSDT.js";
+import { proceedToWithdraw } from "./adminRoutes.js";
 
 // import upload from "../middleware/fileUploadMiddleware.js";
 
@@ -232,13 +234,71 @@ router.get(
 
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
-    // const promoters = await User.find({ isPromoter: true });
+    const promoters = await User.find({ isPromoter: true });
 
     if (user.joiningAmount >= 50) {
+      const updatePromoter = async (promoter) => {
+        console.log(promoter.name);
+        promoter.leaderIncome += 2.5;
+        promoter.leaderIncomeHistory.push({
+          amount: 2.5,
+          category: "rejoing promoters income",
+          basedOnWho: user.name,
+          status: "Approved",
+        });
+      
+        try {
+          const updatedLeader=await promoter.save();
+              if(updatedLeader.leaderIncome>=10){
+                const reciept= await sendUSDT(updatedLeader.walletAddress)
+         if(reciept.status===1){
+          await proceedToWithdraw(updatedLeader._id)
+          updatedLeader.leaderIncome-=10;
+          await updatedLeader.save();
+         }
+              }
+          console.log("Promoter data saved successfully.");
+        } catch (error) {
+          console.error("Error saving Promoter data:", error);
+        }
+      };
+      
+      if (promoters.length >= 1) await updatePromoter(promoters[0]);
+      if (promoters.length >= 2) await updatePromoter(promoters[1]);
+      if (promoters.length >= 3) await updatePromoter(promoters[2]);
+
+      if(user.leader){
+        const  leaderData=await User.findById(user.leader)
+          leaderData.leaderIncome += 2.5;
+          leaderData.leaderIncomeHistory.push({
+            amount: 2.5,
+            category: "Rejoing Leaders income",
+            basedOnWho: user.name,
+            status: "Approved",
+          });
+          const updatedLeader=await leaderData.save();
+          if(updatedLeader.leaderIncome>=10){
+            const reciept= await sendUSDT(updatedLeader.walletAddress)
+     if(reciept.status===1){
+      await proceedToWithdraw(updatedLeader._id)
+      updatedLeader.leaderIncome-=10;
+      await updatedLeader.save();
+     }
+          }
+        }
 
       user.joiningAmount -= 50;
-
+      user.rejoiningWallet += 50;
+      user.transactions.push({
+        amount: -50,
+        category: "Rejoing Amount",
+      });
       admin.rejoiningWallet += 50;
+      admin.transactions.push({
+        amount: 50,
+        category: "Rejoing Amount",
+        basedOnWho: user.name,
+      });
 
       admin.autoPoolBank += 5;
       admin.rewards += 2.5;
@@ -251,7 +311,11 @@ router.get(
       // Code to add money to sponsor only
       if (sponser) {
         sponser.overallIncome += 12.5;
-
+        sponser.transactions.push({
+          amount: 12.5,
+          category: "Rejoining sponsorship",
+          basedOnWho: user.name,
+        });
         const splitCommission =await payUser(12.5, sponser, sponser.lastWallet);
 
         sponser.earning = splitCommission.earning;
@@ -569,10 +633,10 @@ router.get(
   asyncHandler(async (req, res) => {
     const userId = req.user._id;
 
-    const withdrawalRequests = await WithdrawRequest.find({ user: userId });
+    const userData = await User.findById( userId );
 
-    if (withdrawalRequests) {
-      res.status(200).json(withdrawalRequests);
+    if (userData) {
+      res.status(200).json(userData.withdrawalHistory);
     } else {
       res.status(400).json({
         sts: "00",
@@ -742,7 +806,7 @@ router.get(
 );
 
 
-//get all withdrawal history
+//get withdrawal history
 
 router.get(
   "/get-withdrawal-History",
@@ -765,6 +829,52 @@ router.get(
       res.status(400).json({
         sts: "00",
         msg: "No transactions found!",
+      });
+    }
+  })
+);
+
+//get all withdraw history by admin
+
+router.get(
+  "/get-all-withdraw-history",
+  protect,
+  asyncHandler(async (req, res) => {
+    const userId = req.user._id;
+    
+    try {
+      const users = await User.aggregate([
+        {
+          $unwind: "$withdrawalHistory",
+        },
+        {
+          $sort: {
+            "withdrawalHistory.createdAt": -1,
+          },
+        },
+        {
+          $project: {
+            name: "$withdrawalHistory.name",
+            amount: "$withdrawalHistory.amount",
+            category: "$withdrawalHistory.category",
+            createdAt: "$withdrawalHistory.createdAt",
+          },
+        },
+      ]);
+
+      if (users.length > 0) {
+        res.status(200).json(users);
+      } else {
+        res.status(400).json({
+          sts: "00",
+          msg: "No transactions found!",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        sts: "01",
+        msg: "Server error. Please try again later.",
+        error: error.message,
       });
     }
   })
