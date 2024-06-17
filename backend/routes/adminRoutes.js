@@ -572,19 +572,10 @@ router.get(
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
 
           const updatedUser=  await user.save();
             if(updatedUser){
@@ -633,20 +624,10 @@ router.get(
 
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
-
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
 
             const updatedUser= await user.save();
             if(updatedUser){
@@ -701,19 +682,11 @@ router.get(
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
+            
 
             const updatedUser=await user.save();
             if(updatedUser){
@@ -763,19 +736,11 @@ router.get(
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
+            
 
             const updatedUser=await user.save();
             if(updatedUser){
@@ -825,19 +790,11 @@ router.get(
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
+
 
             const updatedUser=await user.save();
             if(updatedUser){
@@ -887,19 +844,11 @@ router.get(
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
-            if (!user.transactions) {
-              user.transactions = [
-                {
-                  category: "autoPool",
-                  amount: amountPerUser,
-                },
-              ];
-            } else {
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
               });
-            }
+            
 
             const updatedUser=await user.save();
             if(updatedUser){
