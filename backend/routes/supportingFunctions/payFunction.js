@@ -62,7 +62,7 @@ export const payUser =async (amount, sponser, lastWallet) =>{
         currentWallet = 'joining';
         const left = "left";
         const right = "right";
-         await bfsNew(sponser, sponser._id, left, right);
+        //  await bfsNew(sponser, sponser._id, left, right);
       }
 
     }

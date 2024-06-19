@@ -179,8 +179,7 @@ const WithdrawHistory = () => {
             <div className="panel">
                 <div className="flex items-center justify-between mb-5">
                     <h5 className="font-semibold text-lg dark:text-white-light">Withraw History</h5>
-                    <button type="submit" onClick={() => setModal21(true)} className="btn btn-gradient !mt-6  border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" > Request Withdraw</button>
-                    {/* <input type="text" className="form-input w-auto" placeholder="Search..." value={search} onChange={(e) => setSearch(e.target.value)} /> */}
+                    {/* <button type="submit" onClick={() => setModal21(true)} className="btn btn-gradient !mt-6  border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]" > Request Withdraw</button> */}
                 </div>
                 <Transition appear show={modal21} as={Fragment}>
                             <Dialog

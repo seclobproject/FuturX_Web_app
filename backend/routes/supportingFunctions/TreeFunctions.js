@@ -102,11 +102,13 @@ export const addCommissionToLine = async (
     }
     
     const currentUser = await User.findById(currentUserId);
-
     console.log("parent names",currentUser.name);
     
-    if (newUser._id===currentUserId) {
-      console.log("-------------------------same id------------------------------");
+    if (currentUser.userStatus=="false") {
+       currentUserId = currentUser.nodeId;
+       continue;
+     }
+     if (newUser._id===currentUserId) {
        currentUserId = currentUser.nodeId;
        continue;
      }
@@ -150,9 +152,7 @@ export const addCommissionToLine = async (
     if(updatedUser){
      await awardCriteria(updatedUser)
     }
-    // if(updatedUser.rejoiningWallet%50){
-      
-    // }
+    
 
     // Move to the parent of the current user
     currentUserId = currentUser.nodeId;

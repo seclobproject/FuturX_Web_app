@@ -277,7 +277,7 @@ router.post(
       if (updateSponsor) {
         const left = "left";
         const right = "right";
-        updateTree = await bfsNew(sponser, userId, left, right);
+        updateTree = await bfsNew(promoters[0]._id, userId, left, right);
       }
       // Assign user to tree finished
 

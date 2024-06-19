@@ -29,7 +29,7 @@ const users = [
     userStatus: true,
     children: [],
     currentPlan: "beginner",
-    autoPool: true,
+    autoPool: false,
     joiningAmount: 0,
   },
   {

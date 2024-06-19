@@ -481,7 +481,7 @@ const Finance = () => {
                                             <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Withdrawal</div>
                                         </div>
                                         <div className="flex flex-col justify-center mt-5">
-                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.totalSaving}</div>
+                                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${totalAmountInfo && totalAmountInfo.savingSum}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -574,9 +574,9 @@ const Finance = () => {
                         </div>
                         {userInfo && userInfo.showWithdraw === true && userInfo.userStatus === true && (
                             <>
-                                <button type="button" onClick={() => navigate('/withdraw')} className="btn rounded-lg p-2 mt-4 text-white">
+                                {/* <button type="button" onClick={() => navigate('/withdraw')} className="btn rounded-lg p-2 mt-4 text-white">
                                     Withdraw
-                                </button>
+                                </button> */}
                                 <div className="mt-3 text-white">Amount will be credited to your account within 24 hours</div>
                             </>
                         )}
@@ -588,12 +588,12 @@ const Finance = () => {
                         </div>
                         <div className="flex items-center justify-between mt-5">
                             <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.joiningAmount.toFixed(2)}</div>
-                            <button type="button" onClick={upgradeHandler} className="btn rounded-lg p-2 mt-4 text-white">
+                            {/* <button type="button" onClick={upgradeHandler} className="btn rounded-lg p-2 mt-4 text-white">
                                 Rejoin
-                            </button>
+                            </button> */}
                         </div>
-                        {rejoinMessage === 1 && <div className="mt-2 text-white">You are successfully upgraded.</div>}
-                        {rejoinMessage === 2 && <div className="mt-2  text-white ">You are not eligible for upgrade as of now</div>}
+                        {/* {rejoinMessage === 1 && <div className="mt-2 text-white">You are successfully upgraded.</div>}
+                        {rejoinMessage === 2 && <div className="mt-2  text-white ">You are not eligible for upgrade as of now</div>} */}
                     </div>
                 </div>
 
