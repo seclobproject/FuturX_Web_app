@@ -15,6 +15,7 @@ import Reports from '../pages/DataTables/Reports';
 import History from '../pages/DataTables/History';
 import AllUsers from '../pages/DataTables/AllUsers';
 import LeaderHistory from '../pages/DataTables/LeaderHistory';
+import AllWithrawHistory from '../pages/DataTables/AllWithrawHistory';
 const Index = lazy(() => import('../pages/Index'));
 const Finance = lazy(() => import('../pages/Finance'));
 const Cards = lazy(() => import('../pages/Components/Cards'));
@@ -48,6 +49,10 @@ const routes = [
     {
         path: '/withdraw-history',
         element: <WithdrawHistory />,
+    },
+    {
+        path: '/allwithdraw-history',
+        element: <AllWithrawHistory />,
     },
 
     // Autopool

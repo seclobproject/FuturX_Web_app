@@ -699,6 +699,53 @@ export const getTotalAmountSlice = createSlice({
     },
 });
 
+//get admins all withdrawals history
+export const getAllWithdrawHistory = createAsyncThunk('getAllWitdrawHistory', async () => {
+    const token: any = localStorage.getItem('userInfo');
+    const parsedData = JSON.parse(token);
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${parsedData.access_token}`,
+            'content-type': 'application/json',
+        },
+    };
+
+    const response = await axios.get(`${URL}/api/users/get-all-withdraw-history`, config);
+
+    return response.data;
+});
+
+export const getAllWithdrawHistorySlice = createSlice({
+    name: 'getAllWithdrawHistorySlice',
+    initialState: {
+        loading: false,
+        data: null,
+        error: '',
+    },
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(getAllWithdrawHistory.pending, (state: any) => {
+                state.loading = true;
+            })
+            .addCase(getAllWithdrawHistory.fulfilled, (state, action) => {
+                state.loading = false;
+                state.data = action.payload;
+            })
+            .addCase(getAllWithdrawHistory.rejected, (state, action) => {
+                state.loading = false;
+                console.error('Error', action.payload);
+
+                if (action.error.message === 'Request failed with status code 500') {
+                    state.error = 'Please make sure you filled all the above details!';
+                } else if (action.error.message === 'Request failed with status code 400') {
+                    state.error = 'Email or Phone already used!';
+                }
+            });
+    },
+});
+
 export const deleteUserForAdminReducer = deleteUserForAdminSlice.reducer;
 export const getTotalAmountsReducer = getTotalAmountSlice.reducer;
 export const uploadImageReducer = uploadImageSlice.reducer;
@@ -713,3 +760,4 @@ export const splitAutoPoolAmountReducer = splitAutoPoolAmountSlice.reducer;
 export const getAllUsersInAutoPoolReducer = getAllUsersInAutoPoolSlice.reducer;
 export const getUserDetailsToAdminReducer = getUserDetailsToAdminSlice.reducer;
 export const getAllUsersToAdminReducer = getAllUsersSlice.reducer;
+export const getAllWithdrawHistoryReducer = getAllWithdrawHistorySlice.reducer;
