@@ -27,7 +27,7 @@ router.post(
     const user = await User.findById(userId);
     const admin = await User.findOne({ isAdmin: true });
     const promoters = await User.find({ isPromoter: true });
-
+    const backupPromoter=promoters[0];
     
     if (!user) {
       res.status(400);
@@ -275,9 +275,14 @@ router.post(
 
       let updateTree;
       if (updateSponsor) {
+        
         const left = "left";
         const right = "right";
-        updateTree = await bfsNew(promoters[0]._id, userId, left, right);
+        console.log("----------------------------------------------------------------------------------");
+        console.log("Starting name",backupPromoter.name);
+        console.log("Starting id",backupPromoter._id);
+        console.log("----------------------------------------------------------------------------------");
+        updateTree = await bfsNew(backupPromoter, userId, left, right);
       }
       // Assign user to tree finished
 

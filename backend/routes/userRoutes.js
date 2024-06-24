@@ -30,7 +30,6 @@ router.post(
   asyncHandler(async (req, res) => {
     const sponser = req.user._id;
     const ownSponserId = generateRandomString();
-    
     const { name, email, password } = req.body;
     let isLeader=false;
     const existingUser = await User.findOne({ email });
@@ -39,6 +38,11 @@ router.post(
       res.status(400);
       throw new Error("User already exists!");
     }
+    const promoterData=await User.find({ isPromoter: true });
+    console.log("-------------------------------------------------------------------------------------------------");
+    console.log("promoter name",promoterData[0].name);
+    console.log("promoter id",promoterData[0].id);
+    console.log("-------------------------------------------------------------------------------------------------");
     let leader
     if(sponserData.isPromoter){
       isLeader=true;

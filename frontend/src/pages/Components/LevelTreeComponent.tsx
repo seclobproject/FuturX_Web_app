@@ -6,6 +6,7 @@ import { log } from 'console';
 
 interface LevelTreeComponentProps {
     level: any;
+    userStatus:boolean;
 }
 
 const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
@@ -22,6 +23,9 @@ const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
 
     const [search2, setSearch2] = useState('');
 
+    const renderStatus = (record: LevelTreeComponentProps) => {
+        return record.userStatus ? 'Active' : 'Inactive';
+      };
     useEffect(() => {
         setPage2(1);
     }, [pageSize2]);
@@ -58,7 +62,7 @@ const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
                             { accessor: 'name', title: 'Name' },
                             { accessor: 'email', title: 'Email' },
                             { accessor: 'currentPlan', title: 'Current Rank' },
-                            { accessor: 'userStatus', title: 'Status', render: (value) => (value ? 'Active' : 'Inactive') },
+                            { accessor: 'userStatus', title: 'Status', render:  renderStatus }
                         ]}
                         totalRecords={initialRecords2 ? initialRecords2.length : 0}
                         recordsPerPage={pageSize2}
