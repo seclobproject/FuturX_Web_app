@@ -8,7 +8,7 @@ import LevelTreeComponent from '../Components/LevelTreeComponent';
 
 const LevelTree = () => {
     const dispatch = useAppDispatch();
-
+    const userStatus = true; 
     const [activeTab, setActiveTab] = useState<any>(1);
 
     const { loading, data: rowData, error } = useAppSelector((state: any) => state.getAllUsersReducer);
@@ -151,15 +151,15 @@ const LevelTree = () => {
             </ul>
 
             <div>
-                <div className="mb-5">{activeTab === 1 && <LevelTreeComponent level={2} />}</div>
-                <div className="mb-5">{activeTab === 2 && <LevelTreeComponent level={3} />}</div>
-                <div className="mb-5">{activeTab === 3 && <LevelTreeComponent level={4} />}</div>
-                <div className="mb-5">{activeTab === 4 && <LevelTreeComponent level={5} />}</div>
-                <div className="mb-5">{activeTab === 5 && <LevelTreeComponent level={6} />}</div>
+                <div className="mb-5">{activeTab === 1 && <LevelTreeComponent level={2} userStatus={userStatus}/>}</div>
+                <div className="mb-5">{activeTab === 2 && <LevelTreeComponent level={3} userStatus={userStatus} />}</div>
+                <div className="mb-5">{activeTab === 3 && <LevelTreeComponent level={4} userStatus={userStatus} />}</div>
+                <div className="mb-5">{activeTab === 4 && <LevelTreeComponent level={5} userStatus={userStatus} />}</div>
+                <div className="mb-5">{activeTab === 5 && <LevelTreeComponent level={6} userStatus={userStatus} />}</div>
 
-                <div className="mb-5">{activeTab === 6 && <LevelTreeComponent level={7} />}</div>
+                <div className="mb-5">{activeTab === 6 && <LevelTreeComponent level={7}  userStatus={userStatus}/>}</div>
 
-                <div className="mb-5">{activeTab === 7 && <LevelTreeComponent level={8} />}</div>
+                <div className="mb-5">{activeTab === 7 && <LevelTreeComponent level={8}  userStatus={userStatus}/>}</div>
 
             </div>
             <div className="flex justify-between">
