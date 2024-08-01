@@ -36,7 +36,6 @@ const Finance = () => {
     const { data: userInfo } = useAppSelector((state: any) => state.getUserDetailsReducer);
     const { data: updatedUser } = useAppSelector((state: any) => state.verifyUserForAdminReducer);
 
-
     const { loading: joiningLoading, data: joiningData, error: joiningError } = useAppSelector((state: any) => state.sendJoiningRequestReducer);
 
     const { data: upgradeInfo, error: upgradeError } = useAppSelector((state: any) => state.upgradeUserReducer);
@@ -146,7 +145,6 @@ const Finance = () => {
             if (receipt.hash) {
                await dispatch(verifyUserForAdmin(userInfo?._id));
             }
-            console.log("send USDT response", updatedUser);   
         } catch (e) {
             console.log(e);
             throw new Error('You rejected your transaction');
@@ -516,28 +514,32 @@ const Finance = () => {
                             </div>
                         </div>
                     </div>
-                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
-                        <div className="flex justify-between">
-                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Referral Link</div>
-                        </div>
-                        <div className="flex items-center my-5">
-                            <input type="text" defaultValue={url} className="form-input" />
-                            <div className="referralBtn sm:flex sm:space-y-0 sm:space-x-2 rtl:space-x-reverse">
-                                <CopyToClipboard
-                                    text={url}
-                                    onCopy={(text, result) => {
-                                        if (result) {
-                                            alert('Referral link copied successfully!');
-                                        }
-                                    }}
-                                >
-                                    <button type="button" className="btn rounded-lg p-2 ms-2 text-white">
-                                        Copy
-                                    </button>
-                                </CopyToClipboard>
-                            </div>
-                        </div>
-                    </div>
+                    {userInfo && !userInfo.isAdmin && userInfo.userStatus && (
+  <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+    <div className="flex justify-between">
+      <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Referral Link</div>
+    </div>
+    <div className="flex items-center my-5">
+      <input type="text" defaultValue={url} className="form-input" />
+      <div className="referralBtn sm:flex sm:space-y-0 sm:space-x-2 rtl:space-x-reverse">
+        <CopyToClipboard
+          text={url}
+          onCopy={(text, result) => {
+            if (result) {
+              alert('Referral link copied successfully!');
+            }
+          }}
+        >
+          <button type="button" className="btn rounded-lg p-2 ms-2 text-white">
+            Copy
+          </button>
+        </CopyToClipboard>
+      </div>
+    </div>
+  </div>
+)}
+
+                  
                     {userInfo && userInfo.isAdmin && (
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                                     <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">

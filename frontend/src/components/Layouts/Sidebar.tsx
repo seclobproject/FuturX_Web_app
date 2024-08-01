@@ -101,7 +101,7 @@ const Sidebar = () => {
                                     <li>
                                 <NavLink to="/dashboard">{t('Home')}</NavLink>
                             </li>
-                            {!userInfo?.isAdmin && (
+                            {userInfo && !userInfo.isAdmin && userInfo.userStatus && (
   <li>
     <NavLink to="/signup">{t('Add New Member')}</NavLink>
   </li>
@@ -175,14 +175,27 @@ const Sidebar = () => {
                                 </NavLink>
                             </li> */}
 
-                            <li className="menu nav-item">
-                                <NavLink to="/withdraw-history" className="group">
-                                    <div className="flex items-center">
-                                        <IconMenuWidgets className="group-hover:!text-primary shrink-0" />
-                                        <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Withdrawal History')}</span>
-                                    </div>
-                                </NavLink>
-                            </li>
+<li>
+  {userInfo?.isAdmin ? (
+   <NavLink to="/allwithdraw-history" className="group">
+   <div className="flex items-center">
+     <IconMenuCharts className="group-hover:!text-primary shrink-0" />
+     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+       {t(' All Withdraw History')}
+     </span>
+   </div>
+ </NavLink>
+  ) : (
+    <NavLink to="/withdraw-history" className="group">
+    <div className="flex items-center">
+     <IconMenuCharts className="group-hover:!text-primary shrink-0" />
+     <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">
+     {t('Withdrawal History')}
+          </span>
+   </div>
+    </NavLink>
+  )}
+</li>
 
                             <h2 className="py-3 px-7 flex items-center uppercase font-extrabold bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] -mx-4 mb-1">
                                 <IconMinus className="w-4 h-5 flex-none hidden" />
@@ -276,14 +289,14 @@ const Sidebar = () => {
                                             </div>
                                         </NavLink>
                                     </li>
-                                    <li className="menu nav-item">
+                                    {/* <li className="menu nav-item">
                                         <NavLink to="/manage-reward" className="group">
                                             <div className="flex items-center">
                                                 <IconMenuCharts className="group-hover:!text-primary shrink-0" />
                                                 <span className="ltr:pl-3 rtl:pr-3 text-black dark:text-[#506690] dark:group-hover:text-white-dark">{t('Manage Reward')}</span>
                                             </div>
                                         </NavLink>
-                                    </li>
+                                    </li> */}
                                 </>
                             )}
 

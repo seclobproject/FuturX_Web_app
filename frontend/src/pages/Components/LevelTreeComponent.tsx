@@ -9,7 +9,7 @@ interface LevelTreeComponentProps {
     userStatus:boolean;
 }
 
-const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level }) => {
+const LevelTreeComponent: React.FC<LevelTreeComponentProps> = ({ level,userStatus }) => {
     const dispatch = useAppDispatch();
 
     const { loading: level2Loading, data: level2Data, error: level2Error } = useAppSelector((state: any) => state.getUsersByLevelReducer);

@@ -206,11 +206,12 @@ console.log(userInfo,"yser from headr")
                             <li>
                                 <NavLink to="/dashboard">{t('Home')}</NavLink>
                             </li>
-                            {!userInfo?.isAdmin && (
+                            {userInfo && !userInfo.isAdmin && userInfo.userStatus &&(
   <li>
     <NavLink to="/signup">{t('Add New Member')}</NavLink>
   </li>
 )}
+     
 
                             {/* <li>
                                 <NavLink to="/analytics">{t('analytics')}</NavLink>
@@ -244,9 +245,9 @@ console.log(userInfo,"yser from headr")
                                 <li>
                                     <NavLink to="/autopool">{t('Auto Pool')}</NavLink>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <NavLink to="/manage-reward">{t('Manage Reward')}</NavLink>
-                                </li>
+                                </li> */}
                             </ul>
                         </li>
                     )}
@@ -306,9 +307,14 @@ console.log(userInfo,"yser from headr")
                             {/* <li>
                                 <NavLink to="/withdraw">{t('Request Withdraw')}</NavLink>
                             </li> */}
-                            <li>
-                                <NavLink to="/withdraw-history">{t('Withdrawal History')}</NavLink>
-                            </li>
+                          <li>
+  {userInfo?.isAdmin ? (
+    <NavLink to="/allwithdraw-history">{t('All Withdrawal History')}</NavLink>
+  ) : (
+    <NavLink to="/withdraw-history">{t('Withdrawal History')}</NavLink>
+  )}
+</li>
+
                         </ul>
                     </li>
                     <li className="menu nav-item relative">
