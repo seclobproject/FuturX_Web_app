@@ -140,8 +140,8 @@ const Finance = () => {
 
             const txn = await contract.transfer(COMPANY_WALLET, amount);
             const receipt = await txn.wait();
-            console.log(receipt, 'Reciept'); // Transaction Hash
-            console.log(receipt.hash, 'hash'); // Transaction Hash
+            console.log(receipt, 'Reciept'); 
+            console.log(receipt.hash, 'hash'); 
             if (receipt.hash) {
                await dispatch(verifyUserForAdmin(userInfo?._id));
             }
@@ -149,12 +149,7 @@ const Finance = () => {
             console.log(e);
             throw new Error('You rejected your transaction');
          } 
-        //finally {
-        //     SetIsLoadingButton(false);
-        //     if (updatedUser && updatedUser.updatedUser.userStatus === true) {
-        //         showMessage();
-        //     }
-        // }
+        
     };
     
     useEffect(() => {
