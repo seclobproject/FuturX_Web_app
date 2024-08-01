@@ -149,7 +149,6 @@ export const editUserProfile = createAsyncThunk('editUserProfile', async (user: 
         `${URL}/api/admin/edit-profile`,
         {
             name: user.userName,
-            email: user.email,
             password: user.password,
             userId:user.id
         },

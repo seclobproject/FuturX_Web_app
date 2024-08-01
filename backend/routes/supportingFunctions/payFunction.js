@@ -1,10 +1,11 @@
+import User from "../../models/userModel.js";
 import { sendUSDT } from "../../utils/sendUSDT.js";
 import { proceedToWithdraw } from "../adminRoutes.js";
 import { bfsNew } from "./TreeFunctions.js";
 
 export const payUser =async (amount, sponser, lastWallet) =>{
   console.log("entered in pay user");
-
+  const actualSponser=await User.findById(sponser.sponser)
   let earning = sponser.earning;
   let joining = sponser.joiningAmount;
   let rebirthAmount = sponser.rebirthAmount;
@@ -12,65 +13,121 @@ export const payUser =async (amount, sponser, lastWallet) =>{
   let addToTotalWallet = 0;
   let variousIncome = 0;
   let currentWallet = lastWallet;
+  let totalRebirthAmount=sponser.totalRebirthAmount;
   
-
   // Loop until all amount is distributed
-  while (amount > 0) {
-
-    if (currentWallet === 'earning') {
-      console.log("entered in earning");
-
-      const spaceInEarning = 50 - (totalWallet % 50);
-      const amountToAdd = Math.min(amount, spaceInEarning);
-      earning += amountToAdd;
-      totalWallet += amountToAdd;
-      addToTotalWallet += amountToAdd;
-      variousIncome += amountToAdd;
-      amount -= amountToAdd;
-      if (totalWallet % 50 === 0 ) {
-        currentWallet = 'joining';
-      }
-      if(totalWallet % 250 === 0){
-        currentWallet = 'rebirth';
-      }
-      if(earning>=10){
-       const reciept= await sendUSDT(sponser.walletAddress)
-       if(reciept.status===1){
-        await proceedToWithdraw(sponser._id)
-        earning -= 10;
-       }
-      }
+  if(sponser.isRebirth){
+    while (amount > 0) {
       
-    } else if(currentWallet==='joining'){
-
-      const spaceInJoining = 50 - (joining % 50);
-      const amountToAdd = Math.min(amount, spaceInJoining);
-      joining += amountToAdd;
-      variousIncome += amountToAdd;
-      amount -= amountToAdd;
-      if (joining % 50 === 0) {
-        currentWallet = 'earning';
+      let rebirthAmountTotal=actualSponser.totalRebirthAmount;
+      if (currentWallet === 'earning') {
+        console.log("entered in earning");
+  
+        const spaceInEarning = 50 - (totalWallet % 50);
+        const amountToAdd = Math.min(amount, spaceInEarning);
+        earning += amountToAdd;
+        totalWallet += amountToAdd;
+        addToTotalWallet += amountToAdd;
+        variousIncome += amountToAdd;
+        amount -= amountToAdd;
+        rebirthAmountTotal+=amountToAdd;
+        if(rebirthAmountTotal>=150){
+          currentWallet = 'rebirth';
+          rebirthAmountTotal-=150
+        }
+        actualSponser.totalRebirthAmount=rebirthAmountTotal;
+        await actualSponser.save()
+        if (totalWallet % 50 === 0 ) {
+          currentWallet = 'joining';
+        }
+        if(earning>=10){
+         const reciept= await sendUSDT(sponser.walletAddress)
+         if(reciept.status===1){
+          await proceedToWithdraw(sponser._id)
+          earning -= 10;
+         }
+        }
+        
+      } else if(currentWallet==='joining'){
+  
+        const spaceInJoining = 50 - (joining % 50);
+        const amountToAdd = Math.min(amount, spaceInJoining);
+        joining += amountToAdd;
+        variousIncome += amountToAdd;
+        amount -= amountToAdd;
+        if (joining % 50 === 0) {
+          currentWallet = 'earning';
+        }
+        
       }
-      
-    }else{
-      const spaceInRebirth = 50 - (rebirthAmount % 50);
-      const amountToAdd = Math.min(amount, spaceInRebirth);
-      rebirthAmount += amountToAdd;
-      variousIncome += amountToAdd;
-      amount -= amountToAdd;
-      if (rebirthAmount % 50 === 0) {
-        currentWallet = 'joining';
-        const left = "left";
-        const right = "right";
-        //  await bfsNew(sponser, sponser._id, left, right);
+    }
+  }else{
+    while (amount > 0) {
+  
+      if (currentWallet === 'earning') {
+        console.log("entered in earning");
+  
+        const spaceInEarning = 50 - (totalWallet % 50);
+        const amountToAdd = Math.min(amount, spaceInEarning);
+        earning += amountToAdd;
+        totalWallet += amountToAdd;
+        addToTotalWallet += amountToAdd;
+        variousIncome += amountToAdd;
+        amount -= amountToAdd;
+        if(sponser.rebirthChildren.length>0){
+          totalRebirthAmount+=amountToAdd
+          if(totalRebirthAmount>=150){
+            currentWallet = 'rebirth';
+            totalRebirthAmount-=150
+          }
+        }
+        if (totalWallet % 50 === 0 ) {
+          currentWallet = 'joining';
+        }
+        if(totalWallet % 150 === 0){
+          currentWallet = 'rebirth';
+        }
+        if(earning>=10){
+         const reciept= await sendUSDT(sponser.walletAddress)
+         if(reciept.status===1){
+          await proceedToWithdraw(sponser._id)
+          earning -= 10;
+         }
+        }
+        
+      } else if(currentWallet==='joining'){
+  
+        const spaceInJoining = 50 - (joining % 50);
+        const amountToAdd = Math.min(amount, spaceInJoining);
+        joining += amountToAdd;
+        variousIncome += amountToAdd;
+        amount -= amountToAdd;
+        if (joining % 50 === 0) {
+          currentWallet = 'earning';
+        }
+        
+      }else{
+        const spaceInRebirth = 50 - (rebirthAmount % 50);
+        const amountToAdd = Math.min(amount, spaceInRebirth);
+        rebirthAmount += amountToAdd;
+        variousIncome += amountToAdd;
+        amount -= amountToAdd;
+        if (rebirthAmount % 50 === 0) {
+          currentWallet = 'joining';
+          // const left = "left";
+          // const right = "right";
+          rebirthStatus=true;
+          //  await bfsNew(sponser, sponser._id, left, right);
+        }
+  
       }
-
+  
     }
 
   }
 
   
-  return { earning, joining,rebirthAmount, addToTotalWallet, currentWallet, variousIncome };
+  return { earning, joining,rebirthAmount, addToTotalWallet, currentWallet,totalRebirthAmount, variousIncome };
   
 };
 
@@ -121,3 +178,6 @@ export const awardCriteria = async (user) => {
 
   await user.save();
 };
+
+
+

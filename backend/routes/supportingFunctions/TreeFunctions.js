@@ -146,7 +146,8 @@ export const addCommissionToLine = async (
     currentUser.totalWallet += splitCommission.addToTotalWallet;
     currentUser.lastWallet = splitCommission.currentWallet;
     currentUser.generationIncome += splitCommission.variousIncome;
-
+    currentUser.totalRebirthAmount = splitCommission.totalRebirthAmount;
+        
     // Save the updated user to the database
     const updatedUser=await currentUser.save();
     if(updatedUser){

@@ -165,7 +165,7 @@ router.post(
           // sponser.thirtyChecker = splitCommission.checker;
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.lastWallet = splitCommission.currentWallet;
-
+          sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
           sponser.sponsorshipIncome += splitCommission.variousIncome;
 
           // const updatedSponser = await sponser.save();
@@ -246,6 +246,7 @@ router.post(
           sponser.rebirthAmount = splitCommission.rebirthAmount;
           // sponser.thirtyChecker = splitCommission.checker;
         
+          sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
 
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.sponsorshipIncome += splitCommission.variousIncome;
@@ -278,10 +279,6 @@ router.post(
         
         const left = "left";
         const right = "right";
-        console.log("----------------------------------------------------------------------------------");
-        console.log("Starting name",backupPromoter.name);
-        console.log("Starting id",backupPromoter._id);
-        console.log("----------------------------------------------------------------------------------");
         updateTree = await bfsNew(backupPromoter, userId, left, right);
       }
       // Assign user to tree finished
@@ -447,7 +444,7 @@ router.put(
 
     if (user) {
       user.name = req.body.name || user.name;
-      user.email = req.body.email || user.email;
+      // user.email = req.body.email || user.email;
 
       if (req.body.password) {
         const hashedPassword = bcrypt.hashSync(req.body.password, 10);
@@ -570,6 +567,7 @@ router.get(
             );
 
             user.earning = splitCommission.earning;
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.joiningAmount = splitCommission.joining;
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
@@ -580,6 +578,7 @@ router.get(
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
 
           const updatedUser=  await user.save();
@@ -626,12 +625,13 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
 
             const updatedUser= await user.save();
@@ -683,13 +683,14 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
             
 
@@ -737,13 +738,14 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
             
 
@@ -791,13 +793,14 @@ router.get(
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
 
 
@@ -845,13 +848,14 @@ router.get(
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-
+            user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
               user.transactions.push({
                 category: "autoPool",
                 amount: amountPerUser,
+                basedOnWho:user.name
               });
             
 
@@ -1218,5 +1222,233 @@ router.get(
     }
   })
 );
+
+
+router.post(
+  "/generate-rebirth",
+  protect,
+  asyncHandler(async (req, res) => {
+    console.log("reched rebirth function");
+    const userId = req.user._id;
+    const promoters = await User.find({ isPromoter: true });
+    const backupPromoter=promoters[0];
+    const sponser = await User.findById(userId);
+    const admin = await User.findOne({ isAdmin: true });
+    let isLeader=false;
+
+    if (!sponser.rebirthStatus) {
+      return res.status(400).json({ sts: "00", msg: "You are not eligible for rebirth" });
+    }
+
+    const hashedPassword = bcrypt.hashSync('123456', 10);
+    const count = sponser.rebirthChildren.length + 1;
+    const name = `${sponser.name}rebirth${count}`;
+    const email = `${sponser.email}${count}`;
+    const ownSponserId = generateRandomString();
+    let leader
+    if(sponser.isPromoter){
+      isLeader=true;
+    }else if(sponser.isLeader){
+      leader=sponser._id
+    }else{
+      leader=sponser.leader
+    }
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({ sts: "00", msg: "Email already exists" });
+    }
+
+    const newUser = await User.create({
+      sponser: sponser._id,
+      name,
+      email,
+      password: hashedPassword,
+      verifyStatus: "active",
+      isRebirth: true,
+      leader,
+      isLeader,
+      ownSponserId,
+      userStatus: true,
+      walletAddress:sponser.walletAddress
+    });
+
+    if (!newUser) {
+      return res.status(500).json({ sts: "00", msg: "Error creating new user" });
+    }
+
+    await sendMail(sponser.email, name, ownSponserId, '123456',newUser.email);
+
+    if (!sponser.children.includes(newUser._id)) {
+      sponser.children.push(newUser._id);
+    } else {
+      return res.status(400).json({ sts: "00", msg: "This Child already exists in this User!" });
+    }
+
+    if (!sponser.rebirthChildren.includes(newUser._id)) {
+      sponser.rebirthChildren.push(newUser._id);
+    } else {
+      return res.status(400).json({ sts: "00", msg: "This Child already exists in this User!" });
+    }
+
+    const updatePromoter = async (promoter) => {
+      console.log(promoter.name);
+      promoter.leaderIncome += 2.5;
+      promoter.leaderIncomeHistory.push({
+        amount: 2.5,
+        category: "promoters income",
+        basedOnWho: newUser.name,
+        status: "Approved",
+      });
+    
+      try {
+        const updatedLeader=await promoter.save();
+            if(updatedLeader.leaderIncome>=10){
+              const reciept= await sendUSDT(updatedLeader.walletAddress)
+       if(reciept.status===1){
+        await proceedToWithdraw(updatedLeader._id)
+        updatedLeader.leaderIncome-=10;
+        await updatedLeader.save();
+       }
+            }
+        console.log("Promoter data saved successfully.");
+      } catch (error) {
+        console.error("Error saving Promoter data:", error);
+      }
+    };
+    
+    if (promoters.length >= 1) await updatePromoter(promoters[0]);
+    if (promoters.length >= 2) await updatePromoter(promoters[1]);
+    if (promoters.length >= 3) await updatePromoter(promoters[2]);
+
+    admin.transactions.push({
+      amount: 50,
+      category: "Rebirth Amount",
+      basedOnWho: newUser.name,
+    });
+    admin.autoPoolBank += 2;
+    admin.rewards += 2.5;
+    await admin.save();
+
+    if(newUser.leader){
+      const  leaderData=await User.findById(newUser.leader)
+        leaderData.leaderIncome += 2.5;
+        leaderData.leaderIncomeHistory.push({
+          amount: 2.5,
+          category: "Leaders income",
+          basedOnWho: newUser.name,
+          status: "Approved",
+        });
+        const updatedLeader=await leaderData.save();
+        if(updatedLeader.leaderIncome>=10){
+          const reciept= await sendUSDT(updatedLeader.walletAddress)
+   if(reciept.status===1){
+    await proceedToWithdraw(updatedLeader._id)
+    updatedLeader.leaderIncome-=10;
+    await updatedLeader.save();
+   }
+        }
+      }
+
+    sponser.overallIncome += 12.5;
+
+    // Rank based on overallIncome
+    if (
+      sponser.children.length >= 3 &&
+      sponser.currentPlan == "beginner"
+    ) {
+      sponser.currentPlan = "bronze";
+    } else if (
+      sponser.children.length >= 6 &&
+      sponser.currentPlan == "bronze"
+    ) {
+      sponser.currentPlan = "silver";
+    } else if (
+      sponser.children.length >= 12 &&
+      sponser.currentPlan == "silver"
+    ) {
+      sponser.currentPlan = "gold";
+    }else if (
+      sponser.children.length >= 24 &&
+      sponser.currentPlan == "gold"
+    ) {
+      sponser.currentPlan = "platinum";
+    }else if (
+      sponser.children.length >= 48 &&
+      sponser.currentPlan == "platinum"
+    ) {
+      sponser.currentPlan = "diamond";
+    }else if (
+      sponser.children.length >= 96 &&
+      sponser.currentPlan == "diamond"
+    ) {
+      sponser.currentPlan = "star";
+    }
+    sponser.rebirthAmount -= 50;
+    sponser.transactions.push({
+      amount: 12.5,
+      category: "sponsorship",
+      basedOnWho: newUser.name,
+    });
+
+    const splitCommission = await payUser(12.5, sponser, sponser.lastWallet);
+
+    sponser.earning = splitCommission.earning;
+    sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
+    sponser.joiningAmount = splitCommission.joining;
+    sponser.rebirthAmount = splitCommission.rebirthAmount;
+    sponser.totalWallet += splitCommission.addToTotalWallet;
+    sponser.rebirthStatus = splitCommission.rebirthStatus;
+    sponser.lastWallet = splitCommission.currentWallet;
+    sponser.sponsorshipIncome += splitCommission.variousIncome;
+
+    if (sponser.children.length >= 3 && !sponser.autoPool) {
+      sponser.autoPool = true;
+      sponser.autoPoolPlan = "startPossession";
+    }
+    
+    sponser.rebirthStatus = false;
+    const updateSponsor = await sponser.save();
+    let updateTree;
+    if (updateSponsor) {
+      const left = "left";
+      const right = "right";
+      updateTree = await bfsNew(backupPromoter, newUser._id, left, right);
+    }
+    if (updateTree) {
+      const attachedNode = updateTree.currentNodeId;
+      newUser.nodeId = attachedNode;
+
+      const updatedUser = await newUser.save();
+
+      if (updatedUser) {
+        console.log("Rebirth id generated successfully");
+        res.status(200).json({ sts: "01", message: "Rebirth id generated successfully" });
+      } else {
+        res.status(400).json({ sts: "00", msg: "Error occurred while updating!" });
+      }
+    } else {
+      res.status(400).json({ msg: "Error assigning user to the tree" });
+    }
+  })
+);
+
+export const processPayments =async () =>{
+  // Find all users with earning > 10
+  const users = await User.find({ earning: { $gt: 10 } });
+
+  // Loop through users and pay them
+  for (const user of users) {
+    if (user.earning >= 10) {
+      const receipt = await sendUSDT(user.walletAddress);
+      if (receipt.status === 1) {
+        await proceedToWithdraw(user._id);
+        user.earning -= 10;
+        await user.save();
+      }
+    }
+  }
+  
+};
 
 export default router;

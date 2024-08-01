@@ -68,7 +68,23 @@ const userSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    birthCount: {
+      type: Number,
+      default: 1
+    },
+    rebirthStatus: {
+      type: Boolean,
+      default: false,
+    },
+    isRebirth: {
+      type: Boolean,
+      default: false,
+    },
     rejoiningWallet: {
+      type: Number,
+      default: 0,
+    },
+    totalRebirthAmount: {
       type: Number,
       default: 0,
     },
@@ -88,6 +104,12 @@ const userSchema = new mongoose.Schema(
     },
     
     transactions: [transactionSchema],
+    rebirthChildren: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     children: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -95,13 +117,13 @@ const userSchema = new mongoose.Schema(
       },
     ],
     left: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     right: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
     nodeId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

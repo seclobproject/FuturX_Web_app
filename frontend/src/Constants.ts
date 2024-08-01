@@ -3,6 +3,7 @@
 export const URL = 'https://login.futurx.vip';
 
 export const USDT_ADDRESS = '0x55d398326f99059fF775485246999027B3197955' // Bsc chain USDT address
-export const COMPANY_WALLET = '0xcEF0C295925c3afA817D9AfB186F76c8194376C3' // BSC company wallet
+// export const COMPANY_WALLET = '0xcEF0C295925c3afA817D9AfB186F76c8194376C3' // BSC company wallet
+export const COMPANY_WALLET = '0xd37aD0aB65669876041a96143f53DAa14A4D0F45' // BSC company wallet
 
 // CHANGE ABOVE EXAMPLE ADDREESSSES

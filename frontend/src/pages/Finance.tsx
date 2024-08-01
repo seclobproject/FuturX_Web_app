@@ -34,6 +34,8 @@ const Finance = () => {
     const currentDateTime = new Date();
 
     const { data: userInfo } = useAppSelector((state: any) => state.getUserDetailsReducer);
+    const { data: updatedUser } = useAppSelector((state: any) => state.verifyUserForAdminReducer);
+
 
     const { loading: joiningLoading, data: joiningData, error: joiningError } = useAppSelector((state: any) => state.sendJoiningRequestReducer);
 
@@ -54,52 +56,117 @@ const Finance = () => {
     const { walletProvider } = useWeb3ModalProvider()
     const { open, selectedNetworkId } = useWeb3ModalState()
 
-    const sendUSDT = async () => {
-        SetIsLoadingButton(true)
-        try {
-            if (!isConnected) throw new Error('Wallet is not connected');
-            if (!walletProvider) throw new Error('Signer failed!');
+    // const sendUSDT = async () => {
+    //     SetIsLoadingButton(true);
+    //     try {
+    //         if (!isConnected) throw new Error('Wallet is not connected');
+    //         if (!walletProvider) throw new Error('Signer failed!');
     
-            const ethersProvider = new BrowserProvider(walletProvider);
-            const signer = await ethersProvider.getSigner();
-            const owner = await signer.getAddress();
-    console.log("owner id",owner);
+    //         const ethersProvider = new BrowserProvider(walletProvider);
+    //         const signer = await ethersProvider.getSigner();
+    //         const owner = await signer.getAddress();
+    //         console.log("owner id", owner);
     
-            const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
-            const amount = parseUnits('50.01', 18);
+    //         const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
+    //         const amount = parseUnits('50.01', 18);
     
-            // Get the wallet balance
-            const balance = await contract.balanceOf(owner);
+    //         // Get the wallet balance
+    //         const balance = await contract.balanceOf(owner);
     
-            // Check if the balance is less than the transfer amount
-            if (balance<amount) {
-                throw new Error('Insufficient balance');
-            }
+    //         // Check if the balance is less than the transfer amount
+    //         if (balance < amount) {
+    //             throw new Error('Insufficient balance');
+    //         }
     
-            const txn = await contract.transfer(COMPANY_WALLET, amount);
-            const receipt = await txn.wait();
+    //         const txn = await contract.transfer(COMPANY_WALLET, amount);
+            
+    //         console.log(txn.hash, 'transaction hash'); // Transaction Hash
     
-            console.log(receipt.hash, 'status'); // Transaction Hash
-            if (receipt.status === 1) {
-                dispatch(verifyUserForAdmin(userInfo?._id));
-            }
-        } catch (e) {
-            // Handle error here
-            console.log(e);
-            throw new Error('You rejected your transaction');
-        }
-        finally{
-            if (userInfo && userInfo.userStatus === true) {
-                SetIsLoadingButton(false);
-              }
-        }
-    };
+    //         contract.on("Transfer", (from, to, value, event) => {
+    //             if (event.transactionHash === txn.hash) {
+    //                 console.log(event.transactionHash, 'status'); // Transaction Hash
+    //                 if (event.blockNumber) {
+    //                     dispatch(verifyUserForAdmin(userInfo?._id));
+    //                     contract.removeAllListeners("Transfer"); // Remove listener after handling event
+    //                 }
+    //             }
+    //         });
+    //     } catch (e) {
+    //         console.log(e);
+    //         throw new Error('You rejected your transaction');
+    //     } finally {
+    //         if (userInfo && userInfo.userStatus === true) {
+    //             SetIsLoadingButton(false);
+    //         }
+    //     }
+    // };
+    
     
 
     // TODO
     // The value data have something to do in ui
     // Which i didn't consider
-    const data = null;
+    
+    const showMessage = () => {
+        MySwal.fire({
+            title: `Amount Transaction is Successfull`,
+            toast: true,
+            position: 'top-right',
+            showConfirmButton: false,
+            timer: 5000,
+            showCloseButton: true,
+        });
+    };
+    const sendUSDT = async () => {
+        SetIsLoadingButton(true);
+        try {
+            if (!isConnected) throw new Error('Wallet is not connected');
+            if (!walletProvider) throw new Error('Signer failed!');
+
+            const ethersProvider = new BrowserProvider(walletProvider);
+            const signer = await ethersProvider.getSigner();
+            const owner = await signer.getAddress();
+    console.log("owner id",owner);
+
+            const contract = new Contract(USDT_ADDRESS, ERC20_ABI, signer);
+            const amount = parseUnits('50.01', 18);
+
+            // Get the wallet balance
+            const balance = await contract.balanceOf(owner);
+
+            // Check if the balance is less than the transfer amount
+            if (balance<amount) {
+                throw new Error('Insufficient balance');
+            }
+
+            const txn = await contract.transfer(COMPANY_WALLET, amount);
+            const receipt = await txn.wait();
+            console.log(receipt, 'Reciept'); // Transaction Hash
+            console.log(receipt.hash, 'hash'); // Transaction Hash
+            if (receipt.hash) {
+               await dispatch(verifyUserForAdmin(userInfo?._id));
+            }
+            console.log("send USDT response", updatedUser);   
+        } catch (e) {
+            console.log(e);
+            throw new Error('You rejected your transaction');
+         } 
+        //finally {
+        //     SetIsLoadingButton(false);
+        //     if (updatedUser && updatedUser.updatedUser.userStatus === true) {
+        //         showMessage();
+        //     }
+        // }
+    };
+    
+    useEffect(() => {
+        if (updatedUser && updatedUser.updatedUser.userStatus === true) {
+            showMessage();
+            window.location.reload();
+            SetIsLoadingButton(false);
+        }
+    }, [updatedUser]);
+
 
     let url = '';
     if (userInfo) {
@@ -241,11 +308,7 @@ const Finance = () => {
 
     const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
 
-    useEffect(() => {
-        if (data) {
-            dispatch(verifyUser());
-        }
-    }, [data]);
+    
 
     // useEffect(() => {
     //     const intervalId = setInterval(() => {
@@ -257,16 +320,41 @@ const Finance = () => {
     //     return () => clearInterval(intervalId);
     // }, []);
 
-    const upgradeHandler = () => {
-        const confirmed = window.confirm('Are you sure you want to upgrade your plan?');
-        if (confirmed) {
-            dispatch(upgradeUser());
+    // const upgradeHandler = () => {
+    //     const confirmed = window.confirm('Are you sure you want to upgrade your plan?');
+    //     if (confirmed) {
+    //         dispatch(upgradeUser());
+    //     }
+    // };
+
+      //Rebirth Status False
+
+      const rebirthStatusChanger = async () => {
+        try {
+            const token: any = localStorage.getItem('userInfo');
+            const parsedData = JSON.parse(token);
+      
+          const config = {
+            headers: {
+              Authorization: `Bearer ${parsedData.access_token}`,
+              'Content-Type': 'application/json',
+            },
+          };
+      
+          const response = await axios.post(`${URL}/api/admin/generate-rebirth`, {}, config);
+          console.log(response, "res rebirthh ");
+      
+        } catch (error) {
+          console.error('Error changing rebirth status:', error);
         }
-    };
+      };
 
     useEffect(() => {
         dispatch(upgradeUser());
-    }, [dispatch]);
+        if(userInfo?.rebirthStatus){
+            rebirthStatusChanger();
+        }
+    }, [dispatch,userInfo]);
 
     return (
         <div>
@@ -648,6 +736,14 @@ const Finance = () => {
                         </div>
                         <div className="flex flex-col justify-center mt-5">
                             <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.sponsorshipIncome.toFixed(2)}</div>
+                        </div>
+                    </div>
+                    <div className="panel bg-gradient-to-r from-purple-950 via-purple-900 to-purple-800 ">
+                        <div className="flex justify-between">
+                            <div className="ltr:mr-1 rtl:ml-1 text-md font-semibold text-white">Total Child Rebirth Amount</div>
+                        </div>
+                        <div className="flex flex-col justify-center mt-5">
+                            <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3 text-white">${userInfo && userInfo.totalRebirthAmount.toFixed(2)}</div>
                         </div>
                     </div>
 

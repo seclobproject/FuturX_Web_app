@@ -38,11 +38,6 @@ router.post(
       res.status(400);
       throw new Error("User already exists!");
     }
-    const promoterData=await User.find({ isPromoter: true });
-    console.log("-------------------------------------------------------------------------------------------------");
-    console.log("promoter name",promoterData[0].name);
-    console.log("promoter id",promoterData[0].id);
-    console.log("-------------------------------------------------------------------------------------------------");
     let leader
     if(sponserData.isPromoter){
       isLeader=true;
@@ -296,6 +291,7 @@ router.get(
       user.transactions.push({
         amount: -50,
         category: "Rejoing Amount",
+        basedOnWho: user.name,
       });
       admin.rejoiningWallet += 50;
       admin.transactions.push({
@@ -327,7 +323,7 @@ router.get(
         sponser.rebirthAmount = splitCommission.rebirthAmount;
         sponser.totalWallet += splitCommission.addToTotalWallet;
         sponser.lastWallet = splitCommission.currentWallet;
-
+        sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
         sponser.sponsorshipIncome += splitCommission.variousIncome;
 
 

@@ -38,7 +38,7 @@ const AccountSetting = () => {
 
     const profileEditHandler = (e: any) => {
         e.preventDefault();
-        dispatch(editUserProfile({ userName, email, password ,id:userInfo?._id}));
+        dispatch(editUserProfile({ userName, password ,id:userInfo?._id}));
         if (userInfo) {
             showMessage2();
         }
@@ -82,10 +82,10 @@ const AccountSetting = () => {
                                             className="form-input"
                                         />
                                     </div>
-                                    <div>
+                                    {/* <div>
                                         <label htmlFor="email">Email</label>
                                         <input id="email" type="email" placeholder={userInfo && userInfo.email} value={email} onChange={(e: any) => setEmail(e.target.value)} className="form-input" />
-                                    </div>
+                                    </div> */}
                                     <div>
                                         <label htmlFor="password">Password</label>
                                         <input id="password" type="text" placeholder="Enter New Password" value={password} onChange={(e: any) => setPassword(e.target.value)} className="form-input" />

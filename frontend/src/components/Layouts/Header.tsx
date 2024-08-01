@@ -165,9 +165,9 @@ console.log(userInfo,"yser from headr")
                                                 <h4 className="text-base">
                                                     {userInfo && userInfo.name}
                                                 </h4>
-                                                <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
+                                                {/* <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
                                                     {userInfo && userInfo.email}
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     </li>
