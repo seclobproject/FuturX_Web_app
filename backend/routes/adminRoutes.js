@@ -1392,30 +1392,28 @@ router.post(
     ) {
       sponser.currentPlan = "star";
     }
-    sponser.rebirthAmount -= 50;
     sponser.transactions.push({
       amount: 12.5,
       category: "sponsorship",
       basedOnWho: newUser.name,
     });
-
+    
     const splitCommission = await payUser(12.5, sponser, sponser.lastWallet);
-
+    
     sponser.earning = splitCommission.earning;
     sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
     sponser.joiningAmount = splitCommission.joining;
-    sponser.rebirthAmount = splitCommission.rebirthAmount;
     sponser.totalWallet += splitCommission.addToTotalWallet;
-    sponser.rebirthStatus = splitCommission.rebirthStatus;
     sponser.lastWallet = splitCommission.currentWallet;
     sponser.sponsorshipIncome += splitCommission.variousIncome;
-
+    sponser.rebirthAmount -= 50;
+    sponser.rebirthStatus = false;
+    
     if (sponser.children.length >= 3 && !sponser.autoPool) {
       sponser.autoPool = true;
       sponser.autoPoolPlan = "startPossession";
     }
     
-    sponser.rebirthStatus = false;
     const updateSponsor = await sponser.save();
     let updateTree;
     if (updateSponsor) {
