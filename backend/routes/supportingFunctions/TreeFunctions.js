@@ -145,6 +145,7 @@ export const addCommissionToLine = async (
     // currentUser.thirtyChecker = splitCommission.checker;
     currentUser.totalWallet += splitCommission.addToTotalWallet;
     currentUser.lastWallet = splitCommission.currentWallet;
+    currentUser.rebirthStatus = splitCommission.rebirthStatus;
     currentUser.generationIncome += splitCommission.variousIncome;
     currentUser.totalRebirthAmount = splitCommission.totalRebirthAmount;
         

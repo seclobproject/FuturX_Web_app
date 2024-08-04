@@ -322,7 +322,8 @@ router.get(
         sponser.joiningAmount = splitCommission.joining;
         sponser.rebirthAmount = splitCommission.rebirthAmount;
         sponser.totalWallet += splitCommission.addToTotalWallet;
-        sponser.lastWallet = splitCommission.currentWallet;
+        sponser.rebirthStatus = splitCommission.rebirthStatus;
+            sponser.lastWallet = splitCommission.currentWallet;
         sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
         sponser.sponsorshipIncome += splitCommission.variousIncome;
 

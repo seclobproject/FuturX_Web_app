@@ -127,7 +127,7 @@ export const payUser =async (amount, sponser, lastWallet) =>{
   }
 
   
-  return { earning, joining,rebirthAmount, addToTotalWallet, currentWallet,totalRebirthAmount, variousIncome };
+  return { earning, joining,rebirthAmount, addToTotalWallet, currentWallet,totalRebirthAmount, variousIncome,rebirthStatus };
   
 };
 

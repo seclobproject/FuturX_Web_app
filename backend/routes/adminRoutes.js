@@ -165,6 +165,7 @@ router.post(
           // sponser.thirtyChecker = splitCommission.checker;
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.lastWallet = splitCommission.currentWallet;
+          sponser.rebirthStatus = splitCommission.rebirthStatus;
           sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
           sponser.sponsorshipIncome += splitCommission.variousIncome;
 
@@ -247,6 +248,7 @@ router.post(
           // sponser.thirtyChecker = splitCommission.checker;
         
           sponser.totalRebirthAmount = splitCommission.totalRebirthAmount;
+          sponser.rebirthStatus = splitCommission.rebirthStatus;
 
           sponser.totalWallet += splitCommission.addToTotalWallet;
           sponser.sponsorshipIncome += splitCommission.variousIncome;
@@ -572,7 +574,8 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
-            user.sponsorshipIncome += splitCommission.variousIncome;
+            user.rebirthStatus = splitCommission.rebirthStatus;
+          user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
 
               user.transactions.push({
@@ -625,6 +628,7 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
+            user.rebirthStatus = splitCommission.rebirthStatus;
             user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
@@ -683,6 +687,7 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
+            user.rebirthStatus = splitCommission.rebirthStatus;
             user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
@@ -738,6 +743,7 @@ router.get(
             user.rebirthAmount = splitCommission.rebirthAmount;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
+            user.rebirthStatus = splitCommission.rebirthStatus;
             user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
@@ -793,6 +799,7 @@ router.get(
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
+            user.rebirthStatus = splitCommission.rebirthStatus;
             user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
@@ -848,6 +855,7 @@ router.get(
             user.joiningAmount = splitCommission.joining;
             user.totalWallet += splitCommission.addToTotalWallet;
             user.lastWallet = splitCommission.currentWallet;
+            user.rebirthStatus = splitCommission.rebirthStatus;
             user.totalRebirthAmount = splitCommission.totalRebirthAmount;
             user.sponsorshipIncome += splitCommission.variousIncome;
             // Add amount to each user end
